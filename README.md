@@ -16,9 +16,9 @@ An alarm clock with vibration capabilities. During an alarm, plays the Super Mar
 2. Adafruit 128x64 OLED set to I2C  
 3. Chronodot v2.1 Real Time Clock (based on DS3231 temperature compensated RTC crystal)  
 4. 2x button switches  
-5. 2x 10k ohm resistors  
+5. 2x 10k ohm resistors (for switches)  
 6. 8ohm thin speaker  
-7. 100 ohm resistor  
+7. 100 ohm resistor (for speaker)  
 8. Pololu DRV8833 dual motor driver  
 9. 10mm vibration motor
 
@@ -48,8 +48,9 @@ This schematic only represents the logical connections I made. The physical conn
 
 3. The OLED is set by default to use the SPI interface. If you want to use I2C, remember to solder the jumpers at the back I used I2C to reduce the wire clutter.
 
-4. Super Mario tune is contained in the tune.h header file. To same memory, the tune is stored into flash memory via PROGMEM to minimise SRAM usage.  
+4. Super Mario tune is contained in the tune.h header file. To save memory, the tune is stored into flash memory via PROGMEM to minimise SRAM usage.
 
+5. I actually used 2x 220ohm resistors as I did not have a 100ohm resistor. I connected those in parallel to give approximately 100ohm for the speaker.
 
 
 <b>References and libraries:</b>  
