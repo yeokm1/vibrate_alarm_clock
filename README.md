@@ -33,7 +33,12 @@ Optional:
 
 ![Screen](misc/schematic-vibrate-clock.png)
 
-This schematic only represents the logical connections I made. The physical connections differs due to space issues. The DRV8833 motor driver is incorrectly represented by another driver as Fritzing does not have this component. Pin A1 on the Arduino is connected to the sleep pin on the DRV8833. I used the picture of a 128x32 OLED as Fritzing does not have 128x64 in I2C.
+This schematic only represents the logical connections I made. The physical connections differs due to space issues.   
+Closest components used as Fritzing does not have them.  
+1. MD030A as DRV8833 motor driver.( Pin A1 on the Arduino is connected to the sleep pin on the DRV8833.)  
+2. 128x32 OLED as 128x64 OLED.  
+3. Fio as Fio V3  
+4. RTC module as Chronodot
 
 <b>Stuff to note:</b>
 
