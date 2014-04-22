@@ -18,8 +18,8 @@
 #define RXLED_PIN 17
 #define OLED_RESET_PIN A0
 
-#define INITIAL_TEXT "Happy 24th birthday\n Jason!\n\n\nBy: Yeo Kheng Meng\n14 May 2014"
-#define INITIAL_TEXT_DELAY 6000
+#define INITIAL_TEXT "Happy 24th birthday\n Jason!\n\nBy: Yeo Kheng Meng\n(14 May 2014)\n\nCompiled on:"
+#define INITIAL_TEXT_DELAY 8000
 #define MIN_TIME_BETWEEN_BUTTON_PRESSES 75  //Debouncing purposes
 #define BLINK_INTERVAL 100
 
@@ -462,19 +462,6 @@ void setup(){
   digitalWrite(RXLED_PIN, LOW);
   TXLED1;
   
-  
-  // initialize with the OLED with I2C addr 0x3D (for the 128x64)
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3D); 
-  
-  display.clearDisplay();
-  display.setTextColor(WHITE);
-  display.setTextSize(1);
-  display.setCursor(0,0);
-  display.println(INITIAL_TEXT);
-  display.display();
-  
-  delay(INITIAL_TEXT_DELAY);
-  
   Wire.begin();
   RTC.begin();
   
@@ -491,6 +478,31 @@ void setup(){
     Serial.println("RTC is older than compile time! Updating");
     RTC.adjust(DateTime(__DATE__, __TIME__));
   } 
+  
+  char compiledDate[30];
+  
+  compiled.toString(compiledDate, 30);
+  
+  
+  
+  // initialize with the OLED with I2C addr 0x3D (for the 128x64)
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3D); 
+  
+  display.clearDisplay();
+  display.setTextColor(WHITE);
+  display.setTextSize(1);
+  display.setCursor(0,0);
+  display.println(INITIAL_TEXT);
+  
+  display.println(compiledDate);
+  
+  
+  display.display();
+  
+  delay(INITIAL_TEXT_DELAY);
+  
+  
+  
   
   pinMode(BUTTON_ALARM_SET_PIN, INPUT); 
   pinMode(BUTTON_TIME_SET_PIN, INPUT); 
