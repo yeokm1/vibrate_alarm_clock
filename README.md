@@ -5,18 +5,16 @@ An alarm clock with vibration capabilities. During an alarm, plays the Super Mar
 
 ![Screen](/misc/front.jpg)
 
-Front shot.
 
 ![Screen](/misc/internal.jpg)
 
-Just for the curious.
 
 
 <b>Main Parts used:</b>  
 
 1. Sparkfun Arduino Fio V3 
 2. Adafruit 128x64 OLED set to I2C  
-3. Chronodot v2.1 Real Time Clock (Based on DS3231 temperature compensated RTC crystal.)  
+3. Chronodot v2.1 Real Time Clock (based on DS3231 temperature compensated RTC crystal)  
 4. 2x button switches  
 5. 2x 10k ohm resistors  
 6. 8ohm thin speaker  
@@ -37,20 +35,36 @@ Optional:
 
 This schematic only represents the logical connections I made. The physical connections differs due to space issues. The DRV8833 motor driver is incorrectly represented by another driver as Fritzing does not have this component. Pin A1 on the Arduino is connected to the sleep pin on the DRV8833.
 
-<b>Stuff to note:</b>  
-1. The Arduino Fio V3 is quite a finicky thing. Occasionally it will repeatedly refuse to accept code uploads and just disconnect the USB connection. Unplugging/Replugging the USB cable even to another USB port does not work. Pressing the reset button three times before an upload seems to make it work again.  
-2. The OLED is set by default to use the SPI interface. If you want to use I2C, remember to solder the jumpers at the back I used I2C to reduce the wire clutter.  
-3. Super Mario tune is contained in the tune.h header file. To same memory, the tune is stored into flash memory via PROGMEM to minimise SRAM usage.  
+<b>Stuff to note:</b>
+
+1. Included is a subproject named vibrate_alarm_clock_test. This is meant to test all input and output functions.  
+  a. On startup, the motor will briefly turn in one then the opposite direction.  
+  b. Speaker will play a short tune.  
+  c. Pressing left button will rotate motor in one direction until released.  
+  d. Pressing right button will rotate motor in another direction until released.  
+  e. Pressing both buttons will play the short tune.  
+
+2. The Arduino Fio V3 is quite a finicky thing. Occasionally it will repeatedly refuse to accept code uploads and just disconnect the USB connection. Unplugging/Replugging the USB cable even to another USB port does not work. Pressing the reset button three times before an upload seems to make it work again.
+
+3. The OLED is set by default to use the SPI interface. If you want to use I2C, remember to solder the jumpers at the back I used I2C to reduce the wire clutter.
+
+4. Super Mario tune is contained in the tune.h header file. To same memory, the tune is stored into flash memory via PROGMEM to minimise SRAM usage.  
 
 
 
-References and libraries:  
+<b>References and libraries:</b>  
 
 1. Adafruit SSD1306 OLED library  
 (https://github.com/adafruit/Adafruit_SSD1306)
 
-2. Get day of week from date.  
+2. AnyRTC RTClib  
+(https://github.com/maniacbug/AnyRtc)
+
+3. Get day of week from date.  
 (http://stackoverflow.com/a/21235587)
+
+4. Super Mario tune  
+(http://www.linuxcircle.com/2013/03/31/playing-mario-bros-tune-with-arduino-and-piezo-buzzer/)
 
 
 
