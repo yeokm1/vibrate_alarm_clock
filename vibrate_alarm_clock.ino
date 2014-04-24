@@ -95,7 +95,7 @@ void loop(){
   checkAndSoundAlarm(now.hour(), now.minute());
   soundAlarmAtThisPointIfNeeded();
   
-  if(showLCD){
+  if(showLCD || currentState == ALARM){
     display.clearDisplay();
 
     writeDateTimeToDisplayBuffer(now, blinkOnForSetting);
@@ -159,17 +159,27 @@ void soundAlarmAtThisPointIfNeeded(){
   
 }
 
+void turnOffLCD(){
+  if(!showLCD){
+    display.clearDisplay();
+    display.display();
+  }
+}
+
 void stopAlarm(){
   currentState = NORMAL;
   turnMotor(false, false);
   noTone(SPEAKER_PIN);
   toneNow = 0;
   
+  turnOffLCD();
   
 }
 
+
+
 void  processLCDOffButtonPressed(){
-    unsigned long currentMillis = millis();
+  unsigned long currentMillis = millis();
   
   if((currentMillis - timeLastPressedLCDOffButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
     return;
@@ -178,13 +188,15 @@ void  processLCDOffButtonPressed(){
   timeLastPressedLCDOffButton = currentMillis;
   
   Serial.println("LCD Off Button Press");
+  
+  if(currentState == ALARM){
+    stopAlarm();
+    return;
+  }
 
   showLCD = !showLCD;
-  
-  if(!showLCD){
-    display.clearDisplay();
-    display.display();
-  }
+  turnOffLCD();
+
   
 }
 
