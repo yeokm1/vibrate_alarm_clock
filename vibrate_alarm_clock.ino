@@ -19,6 +19,13 @@
 #define RXLED_PIN 17
 #define OLED_RESET_PIN A0
 
+#define VOLTAGE_MEASURE_PIN A1
+#define ADC_PRECISION 1024
+#define VOLTAGE_OF_VCC_MV 3310
+
+#define MIN_BATTERY_MILLIVOLT 3300
+#define MAX_BATTERY_MILLIVOLT 4300
+
 #define INITIAL_TEXT "Happy 24th birthday\n Jason!\n\nBy: Yeo Kheng Meng\n(14 May 2014)\n\nCompiled on:"
 #define INITIAL_TEXT_DELAY 8000
 #define MIN_TIME_BETWEEN_BUTTON_PRESSES 100  //Debouncing purposes
@@ -71,13 +78,14 @@ boolean showLCD = true;
 void loop(){
 
       
-  DateTime now = RTC.now();
+  
     
   int alarmSetButtonState = digitalRead(BUTTON_ALARM_SET_PIN);
   int timeSetButtonState = digitalRead(BUTTON_TIME_SET_PIN);
   int lcdOffPinState = digitalRead(LCD_OFF_PIN);
+  int voltageADCReading = analogRead(VOLTAGE_MEASURE_PIN);
   
-  boolean blinkOnForSetting = shouldBlinkNow();
+
   
   
   if(alarmSetButtonState == HIGH){
@@ -91,15 +99,28 @@ void loop(){
   if(lcdOffPinState == HIGH){
     processLCDOffButtonPressed();
   }
+ 
+  DateTime now = RTC.now();
   
   checkAndSoundAlarm(now.hour(), now.minute());
   soundAlarmAtThisPointIfNeeded();
   
   if(showLCD || currentState == ALARM){
+    
     display.clearDisplay();
+
+    boolean blinkOnForSetting = shouldBlinkNow();
+    
+    //Multiply 2 as we are are using a half voltage divider
+    int batteryMilliVolt = ((float) voltageADCReading / ADC_PRECISION) * 2 * VOLTAGE_OF_VCC_MV;
 
     writeDateTimeToDisplayBuffer(now, blinkOnForSetting);
     writeAlarmToDisplayBuffer(blinkOnForSetting);
+    
+    
+    writeVoltageToDisplayBuffer(batteryMilliVolt);
+    
+    
     display.display();
   }
   
@@ -109,6 +130,29 @@ void loop(){
   
 }
 
+void writeVoltageToDisplayBuffer(int batteryMilliVolt){
+  
+  display.setTextSize(1);
+  display.setCursor(98,49);
+  float voltage = (float) batteryMilliVolt / 1000;
+  
+  char buff[5];
+  String voltageString = dtostrf(voltage, 4, 2, buff);
+ 
+  display.print(voltageString);
+  display.print("V");
+  
+  int batteryRange = MAX_BATTERY_MILLIVOLT - MIN_BATTERY_MILLIVOLT;
+  
+  int batteryPercent = 100 * (((float)(batteryMilliVolt - MIN_BATTERY_MILLIVOLT)) / batteryRange);
+
+  display.setCursor(104,57);
+  display.print(batteryPercent);
+  display.print("%");
+
+
+}
+
 void checkAndSoundAlarm(int hour, int minute){
   
   unsigned long currentMillis = millis();
@@ -116,7 +160,6 @@ void checkAndSoundAlarm(int hour, int minute){
   if(hour == alarmHour && minute == alarmMinute && currentState == NORMAL
   && ((currentMillis - alarmLastStarted) > MIN_TIME_BETWEEN_ALARM_STARTS)
   && (alarmVibrate || alarmSound)){
-    Serial.println("Alarm started");
     currentState = ALARM;
     alarmLastStarted = currentMillis;
   }
@@ -124,10 +167,10 @@ void checkAndSoundAlarm(int hour, int minute){
   
 }
 
+
 void soundAlarmAtThisPointIfNeeded(){
 
   if(currentState == ALARM){
-    Serial.println("Alarm now");
     
     unsigned long currentMillis = millis();
 
@@ -229,7 +272,6 @@ void processAlarmSetButtonPressed(){
     { 
       currentState = SETTING_ALARM;
       settingAlarmProcess = A_HOUR;
-      Serial.println("Entering alarm setting mode");
     }
     break;
     case SETTING_ALARM:
@@ -239,7 +281,6 @@ void processAlarmSetButtonPressed(){
       } else if(settingAlarmProcess == A_MINUTE){
          settingAlarmProcess = A_TYPE;
       } else {
-        Serial.println("Exit alarm setting mode");
         currentState = NORMAL;
       }
 
@@ -516,9 +557,6 @@ void setup(){
   Wire.begin();
   RTC.begin();
   
-  if (!RTC.isrunning()) {
-    Serial.println("RTC is NOT running");
-  }
 
   // This section grabs the current datetime and compares it to
   // the compilation time.  If necessary, the RTC is updated.
@@ -526,7 +564,6 @@ void setup(){
   DateTime compiled = DateTime(__DATE__, __TIME__);
   
   if (now.unixtime() < compiled.unixtime()) {
-    Serial.println("RTC is older than compile time! Updating");
     RTC.adjust(DateTime(__DATE__, __TIME__));
   } 
   
@@ -556,7 +593,7 @@ void setup(){
   pinMode(BUTTON_ALARM_SET_PIN, INPUT); 
   pinMode(BUTTON_TIME_SET_PIN, INPUT); 
   pinMode(LCD_OFF_PIN, INPUT);
-  
+  pinMode(VOLTAGE_MEASURE_PIN, INPUT);
   
   pinMode(MOTOR_PIN1, OUTPUT); 
   pinMode(MOTOR_PIN2, OUTPUT);
