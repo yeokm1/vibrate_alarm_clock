@@ -255,20 +255,20 @@ void processAlarmSetButtonPressed(){
   timeLastPressedAlarmSetButton = currentMillis;
   
   Serial.println("Alarm Set Button Pressed");
-  
-  //Do not process button if not active
-  if(!showLCD && currentState != ALARM){
-    return;
-  }
-  
+   
   switch(currentState)
   {
     case ALARM: stopAlarm();
     break;
     case NORMAL :
-    { 
-      currentState = SETTING_ALARM;
-      settingAlarmProcess = A_HOUR;
+    {
+      if(showLCD){
+        currentState = SETTING_ALARM;
+        settingAlarmProcess = A_HOUR;
+      } else {
+        showLCD = true;
+      }
+
     }
     break;
     case SETTING_ALARM:
@@ -305,19 +305,16 @@ void processTimeSetButtonPressed(){
   timeLastPressedTimeSetButton = currentMillis;
   
   Serial.println("Time Set Button Pressed");
-  
-  //Do not process button if not active
-  if(!showLCD && currentState != ALARM){
-    return;
-  }
-  
+   
   switch(currentState)
   {
     case ALARM: stopAlarm();
     break;
     case NORMAL :
    { 
-
+      if(!showLCD){
+        showLCD = true;
+      }
    }
     break;
     case SETTING_ALARM:
