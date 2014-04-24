@@ -14,13 +14,14 @@
 #define MOTOR_SLEEP_PIN 7 //D7
 
 #define SPEAKER_PIN 9 //D9
+#define LCD_OFF_PIN 6 //D6
 
 #define RXLED_PIN 17
 #define OLED_RESET_PIN A0
 
 #define INITIAL_TEXT "Happy 24th birthday\n Jason!\n\nBy: Yeo Kheng Meng\n(14 May 2014)\n\nCompiled on:"
 #define INITIAL_TEXT_DELAY 8000
-#define MIN_TIME_BETWEEN_BUTTON_PRESSES 75  //Debouncing purposes
+#define MIN_TIME_BETWEEN_BUTTON_PRESSES 100  //Debouncing purposes
 #define BLINK_INTERVAL 100
 
 #define MIN_TIME_BETWEEN_ALARM_STARTS 60000 //60 seconds
@@ -55,6 +56,7 @@ boolean lastMotorDirection;
 
 unsigned long timeLastPressedAlarmSetButton;
 unsigned long timeLastPressedTimeSetButton;
+unsigned long timeLastPressedLCDOffButton;
 
 boolean previousBlinkState;
 unsigned long previousBlinkTime;
@@ -64,7 +66,7 @@ unsigned long timePlayedPreviousTone;
 int toneNow = 0;
 int previousNoteDuration;
   
-
+boolean showLCD = true;
 
 void loop(){
 
@@ -73,6 +75,8 @@ void loop(){
     
   int alarmSetButtonState = digitalRead(BUTTON_ALARM_SET_PIN);
   int timeSetButtonState = digitalRead(BUTTON_TIME_SET_PIN);
+  int lcdOffPinState = digitalRead(LCD_OFF_PIN);
+  
   boolean blinkOnForSetting = shouldBlinkNow();
   
   
@@ -84,14 +88,20 @@ void loop(){
     processTimeSetButtonPressed();
   }
   
+  if(lcdOffPinState == HIGH){
+    processLCDOffButtonPressed();
+  }
+  
   checkAndSoundAlarm(now.hour(), now.minute());
   soundAlarmAtThisPointIfNeeded();
   
-  display.clearDisplay();
+  if(showLCD){
+    display.clearDisplay();
 
-  writeDateTimeToDisplayBuffer(now, blinkOnForSetting);
-  writeAlarmToDisplayBuffer(blinkOnForSetting);
-  display.display();
+    writeDateTimeToDisplayBuffer(now, blinkOnForSetting);
+    writeAlarmToDisplayBuffer(blinkOnForSetting);
+    display.display();
+  }
   
   
 
@@ -155,6 +165,26 @@ void stopAlarm(){
   noTone(SPEAKER_PIN);
   toneNow = 0;
   
+  
+}
+
+void  processLCDOffButtonPressed(){
+    unsigned long currentMillis = millis();
+  
+  if((currentMillis - timeLastPressedLCDOffButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
+    return;
+  }
+  
+  timeLastPressedLCDOffButton = currentMillis;
+  
+  Serial.println("LCD Off Button Press");
+
+  showLCD = !showLCD;
+  
+  if(!showLCD){
+    display.clearDisplay();
+    display.display();
+  }
   
 }
 
@@ -501,11 +531,10 @@ void setup(){
   
   delay(INITIAL_TEXT_DELAY);
   
-  
-  
-  
+
   pinMode(BUTTON_ALARM_SET_PIN, INPUT); 
   pinMode(BUTTON_TIME_SET_PIN, INPUT); 
+  pinMode(LCD_OFF_PIN, INPUT);
   
   
   pinMode(MOTOR_PIN1, OUTPUT); 
