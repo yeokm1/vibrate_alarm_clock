@@ -26,13 +26,15 @@
 #define MIN_BATTERY_MILLIVOLT 3300 //You may need to calibrate this
 #define MAX_BATTERY_MILLIVOLT 4300 //You may need to calibrate this
 
-#define INITIAL_TEXT "Happy 24th birthday\n Jason!\n\nBy: Yeo Kheng Meng\n(14 May 2014)\n\nCompiled on:"
+#define INITIAL_TEXT "Happy 24th birthday\n Jason!\n\nBy: Yeo Kheng Meng\n(14 May 2014)"
 #define INITIAL_TEXT_DELAY 8000
 #define MIN_TIME_BETWEEN_BUTTON_PRESSES 100  //Debouncing purposes
 #define BLINK_INTERVAL 100
 
 #define MIN_TIME_BETWEEN_ALARM_STARTS 60000 //60 seconds
 #define MIN_TIME_TO_CHANGE_MOTOR_DIRECTION 1500
+
+#define MAX_ALARM_LENGTH 1200000 //Alarm rings for 20 minutes max
 
 RTC_DS1307 RTC;
 Adafruit_SSD1306 display(OLED_RESET_PIN);
@@ -72,18 +74,11 @@ int previousNoteDuration;
 boolean showLCD = true;
 
 void loop(){
-
-      
-  
     
   int alarmSetButtonState = digitalRead(BUTTON_ALARM_SET_PIN);
   int timeSetButtonState = digitalRead(BUTTON_TIME_SET_PIN);
   int lcdOffPinState = digitalRead(LCD_OFF_PIN);
 
-  
-
-  
-  
   if(alarmSetButtonState == HIGH){
     processAlarmSetButtonPressed();
   }
@@ -98,8 +93,14 @@ void loop(){
  
   DateTime now = RTC.now();
   
+
   checkAndSoundAlarm(now.hour(), now.minute());
   soundAlarmAtThisPointIfNeeded();
+  
+  //Disable alarm if it has gone longer than maximum
+  if(currentState == ALARM && (millis() - alarmLastStarted) > MAX_ALARM_LENGTH){
+    stopAlarm();
+  }
   
   if(showLCD || currentState == ALARM){
     
@@ -122,11 +123,8 @@ void loop(){
     display.display();
   }
   
-  
-
-
-  
 }
+
 
 void writeVoltageToDisplayBuffer(int batteryMilliVolt){
   
@@ -161,8 +159,7 @@ void checkAndSoundAlarm(int hour, int minute){
     currentState = ALARM;
     alarmLastStarted = currentMillis;
   }
-  
-  
+
 }
 
 
@@ -192,10 +189,7 @@ void soundAlarmAtThisPointIfNeeded(){
       tone(SPEAKER_PIN, getToneAtThisPosition(toneNow),noteDuration);
       
     }
-   
 
-
-    
   }
   
 }
@@ -561,11 +555,6 @@ void setup(){
     RTC.adjust(DateTime(__DATE__, __TIME__));
   } 
   
-  char compiledDate[30];
-  
-  compiled.toString(compiledDate, 30);
-  
-  
   
   // initialize with the OLED with I2C addr 0x3D (for the 128x64)
   display.begin(SSD1306_SWITCHCAPVCC, 0x3D); 
@@ -575,9 +564,7 @@ void setup(){
   display.setTextSize(1);
   display.setCursor(0,0);
   display.println(INITIAL_TEXT);
-  
-  display.println(compiledDate);
-  
+ 
   
   display.display();
   
