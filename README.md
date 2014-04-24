@@ -1,7 +1,7 @@
 vibrate_alarm_clock
 ===================
 
-An alarm clock with vibration capabilities. During an alarm, plays the Super Mario tune. Buttons available to set the date and alarm. (Date setting not completed) This device is meant for my friend's birthday.
+An alarm clock with vibration capabilities. Battery monitoring is also available. During an alarm, it plays the Super Mario tune. Buttons available to set the alarm, turn off OLED and reset. (Date setting not completed) This device is meant for my friend's birthday.
 
 ![Screen](/misc/front.jpg)
 
@@ -15,12 +15,13 @@ An alarm clock with vibration capabilities. During an alarm, plays the Super Mar
 1. Sparkfun Arduino Fio V3 
 2. Adafruit 1.3" 128x64 OLED set to I2C  
 3. Chronodot v2.1 Real Time Clock (based on DS3231 temperature compensated RTC crystal)  
-4. 2x button switches  
-5. 2x 10k ohm resistors (for switches)  
+4. 4x button switches (1 switch as reset button)  
+5. 3x 10k ohm resistors (for switches)  
 6. 8ohm thin speaker  
 7. 100 ohm resistor (for speaker)  
-8. Pololu DRV8833 dual motor driver  
-9. 10mm vibration motor
+8. 2x 1k ohm resistors (as voltage divider to measure battery voltage)
+9. Pololu DRV8833 dual motor driver  
+10. 10mm vibration motor
 
 
 Optional:  
@@ -35,9 +36,9 @@ Optional:
 
 This schematic only represents the logical connections I made. The physical connections differs due to space issues.   
 Closest components used as Fritzing does not have them.  
-1. MD030A as DRV8833 motor driver.( Pin A1 on the Arduino is connected to the sleep pin on the DRV8833.)  
+1. MD030A as DRV8833 motor driver. (Pin A1 on the Arduino is connected to the sleep pin on the DRV8833.)  
 2. 128x32 OLED as 128x64 OLED.  
-3. Fio as Fio V3  
+3. Fio as Fio V3 (Fio's DST Pin = Fio V3's RST Pin)  
 4. RTC module as Chronodot
 
 <b>Stuff to note:</b>
@@ -45,9 +46,10 @@ Closest components used as Fritzing does not have them.
 1. Included is a subproject named vibrate_alarm_clock_test. This is meant to test all input and output functions.  
   a. On startup, the motor will briefly turn in one then the opposite direction.  
   b. Speaker will play a short tune.  
-  c. Pressing left button will rotate motor in one direction until released.  
-  d. Pressing right button will rotate motor in another direction until released.  
+  c. Pressing first button will rotate motor in one direction until released.  
+  d. Pressing second button will rotate motor in another direction until released.  
   e. Pressing both buttons will play the short tune.  
+  f. Third button will turn on/off the OLED.
 
 2. The Arduino Fio V3 is quite a finicky thing. Occasionally it will repeatedly refuse to accept code uploads and just disconnect the USB connection. Unplugging/Replugging the USB cable even to another USB port does not work. Pressing the reset button three times before an upload seems to make it work again.
 
