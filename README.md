@@ -2,7 +2,7 @@ vibrate_alarm_clock
 ===================
 
 An alarm clock with vibration and battery monitoring capabilities. During an alarm, it plays the Super Mario tune. Buttons available to set the alarm, turn off OLED and reset. (Date setting not completed)  
-This device is meant for my friend's birthday.
+This device is meant as my friend's birthday gift.
 
 ![Screen](/misc/front.jpg)
 
@@ -63,7 +63,10 @@ Closest components used as Fritzing does not have them.
 
 6. One is supposed to add a pull-up resistor for the I2C bus lines SCL and SDA if more than one device (OLED and Chronodot) uses them. I tried without the resistor and it seems to work fine. 
 
-7. Fio V3's I2C lines are on D2(SDA) and D3(SCL).
+7. Fio V3's I2C lines are on D2(SDA) and D3(SCL).  
+
+8. The alarm by default lasts for only 20 minutes before automatically turning off to conserve power. Customise this value MAX_ALARM_LENGTH if needed.  
+
 
 <b>References and libraries:</b>  
 
