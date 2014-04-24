@@ -20,6 +20,10 @@
 #define RXLED 17
 #define OLED_RESET A0
 
+#define ADC_PRECISION 1024
+#define VOLTAGE_MEASURE_PIN A1
+#define VOLTAGE_OF_VCC_MV 3310
+
 RTC_DS1307 RTC;
 Adafruit_SSD1306 display(OLED_RESET);
 
@@ -66,6 +70,8 @@ void setup(){
   
   pinMode(BUTTON_SET_PIN, INPUT); 
   pinMode(BUTTON_ADJUST_PIN, INPUT); 
+  pinMode(LCD_OFF_PIN, INPUT);
+  pinMode(VOLTAGE_MEASURE_PIN, INPUT);
   
   
   pinMode(MOTOR_PIN1, OUTPUT); 
@@ -73,7 +79,8 @@ void setup(){
   pinMode(MOTOR_SLEEP_PIN, OUTPUT);
   
   
-  pinMode(LCD_OFF_PIN, OUTPUT);
+
+  
   
   playTune();
   
@@ -98,6 +105,7 @@ void loop(){
   int setPinState = digitalRead(BUTTON_SET_PIN);
   int adjustPinState = digitalRead(BUTTON_ADJUST_PIN);
   int lcdOffPinState = digitalRead(LCD_OFF_PIN);
+  int voltageADCReading = analogRead(VOLTAGE_MEASURE_PIN);
   
   //Press both to play tune
   if(setPinState == HIGH && adjustPinState == HIGH){
@@ -123,8 +131,16 @@ void loop(){
     showLCD = !showLCD;
   }
   
+  int batteryVoltage = getMVOfBattery(voltageADCReading);
+  Serial.print("VoltageADC: ");
+  Serial.println(voltageADCReading);
   
-     DateTime now = RTC.now();
+  Serial.print("Voltage: ");
+  Serial.print(batteryVoltage);
+  Serial.println("mV");
+  
+  
+    DateTime now = RTC.now();
     
     Serial.print(now.year(), DEC);
     Serial.print('/');
@@ -160,6 +176,10 @@ void loop(){
       display.setTextSize(1);
       String dateString = generateDateString(now.year(), now.month(), now.day());
       display.println(dateString);
+      
+      display.print("Voltage: ");
+      display.print(batteryVoltage);
+      display.println("mV");
 
     } 
 
@@ -172,6 +192,10 @@ void loop(){
 
   
   
+}
+
+int getMVOfBattery(int ADCReading){
+  return ((float) ADCReading / ADC_PRECISION) * 2 * VOLTAGE_OF_VCC_MV;
 }
 
 void playTune(){
