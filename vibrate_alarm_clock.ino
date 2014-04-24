@@ -178,7 +178,7 @@ void stopAlarm(){
 
 
 
-void  processLCDOffButtonPressed(){
+void processLCDOffButtonPressed(){
   unsigned long currentMillis = millis();
   
   if((currentMillis - timeLastPressedLCDOffButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
