@@ -14,7 +14,7 @@ I agree this is an epic mess but the space constraints left me no choice.
 
 <b>Main Parts used:</b>  
 
-1. Sparkfun Arduino Fio V3 
+1. Sparkfun Arduino Fio V3 (based on ATmega32U4 chip)  
 2. Adafruit 1.3" 128x64 OLED set to I2C  
 3. Chronodot v2.1 Real Time Clock (based on DS3231 temperature compensated RTC crystal)  
 4. 4x button switches (1 switch as reset button)  
