@@ -9,7 +9,7 @@ This device is meant for my friend's birthday.
 
 ![Screen](/misc/internal.jpg)
 
-I agree this is an epic mess but the space constraints left me no choice. 
+I agree this is an epic mess but the space constraints left me no choice. Higher resolution photos are available in the "misc" directory.   
 
 
 <b>Main Parts used:</b>  
