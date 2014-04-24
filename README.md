@@ -9,6 +9,7 @@ This device is meant for my friend's birthday.
 
 ![Screen](/misc/internal.jpg)
 
+I agree this is an epic mess but the space constraints left me no choice. 
 
 
 <b>Main Parts used:</b>  
@@ -18,7 +19,7 @@ This device is meant for my friend's birthday.
 3. Chronodot v2.1 Real Time Clock (based on DS3231 temperature compensated RTC crystal)  
 4. 4x button switches (1 switch as reset button)  
 5. 3x 10k ohm resistors (for switches)  
-6. 8ohm thin speaker  
+6. 8 ohm thin speaker  
 7. 100 ohm resistor (for speaker)  
 8. 2x 1k ohm resistors (as voltage divider to measure battery voltage)
 9. Pololu DRV8833 dual motor driver  
