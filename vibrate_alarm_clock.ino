@@ -256,10 +256,11 @@ void processAlarmSetButtonPressed(){
   
   Serial.println("Alarm Set Button Pressed");
   
-  if(!showLCD){
+  //Do not process button if not active
+  if(!showLCD && currentState != ALARM){
     return;
   }
-
+  
   switch(currentState)
   {
     case ALARM: stopAlarm();
@@ -305,7 +306,8 @@ void processTimeSetButtonPressed(){
   
   Serial.println("Time Set Button Pressed");
   
-  if(!showLCD){
+  //Do not process button if not active
+  if(!showLCD && currentState != ALARM){
     return;
   }
   
