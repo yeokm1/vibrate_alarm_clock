@@ -48,7 +48,7 @@ Closest components used as Fritzing does not have them.
   b. Speaker will play a short tune.  
   c. Pressing first button will rotate motor in one direction until released.  
   d. Pressing second button will rotate motor in another direction until released.  
-  e. Pressing both buttons will play the short tune.  
+  e. Pressing both first and second buttons will play the short tune.  
   f. Third button will turn on/off the OLED.
 
 2. The Arduino Fio V3 is quite a finicky thing. Occasionally it will repeatedly refuse to accept code uploads and just disconnect the USB connection. Unplugging/Replugging the USB cable even to another USB port does not work. Pressing the reset button three times before an upload seems to make it work again.
