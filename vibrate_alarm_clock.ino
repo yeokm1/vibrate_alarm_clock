@@ -189,14 +189,23 @@ void processLCDOffButtonPressed(){
   
   Serial.println("LCD Off Button Press");
   
-  if(currentState == ALARM){
-    stopAlarm();
-    return;
+  switch(currentState)
+  {
+  case ALARM: stopAlarm();
+  break;
+  case NORMAL :
+  {
+    showLCD = !showLCD;
+    turnOffLCD();
   }
-
-  showLCD = !showLCD;
-  turnOffLCD();
-
+  break;
+  case SETTING_ALARM:
+  break;
+  case SETTING_TIME:
+  break;
+  default: break;
+  }
+  
   
 }
 
