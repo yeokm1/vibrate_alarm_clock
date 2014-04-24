@@ -13,7 +13,7 @@
 #define MOTOR_PIN2 A2
 #define MOTOR_SLEEP_PIN A1
 
-#define SPEAKER_PIN 7 //D7
+#define SPEAKER_PIN 9 //D9
 
 #define RXLED_PIN 17
 #define OLED_RESET_PIN A0
