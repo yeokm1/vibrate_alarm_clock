@@ -259,6 +259,10 @@ void processAlarmSetButtonPressed(){
   timeLastPressedAlarmSetButton = currentMillis;
   
   Serial.println("Alarm Set Button Pressed");
+  
+  if(!showLCD){
+    return;
+  }
 
   switch(currentState)
   {
@@ -304,6 +308,10 @@ void processTimeSetButtonPressed(){
   timeLastPressedTimeSetButton = currentMillis;
   
   Serial.println("Time Set Button Pressed");
+  
+  if(!showLCD){
+    return;
+  }
   
   switch(currentState)
   {
