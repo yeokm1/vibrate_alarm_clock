@@ -15,6 +15,7 @@
 #define MOTOR_SLEEP_PIN A1
 
 #define SPEAKER_PIN 7 //D7
+#define LCD_OFF_PIN 9 //D9
 
 #define RXLED 17
 #define OLED_RESET A0
@@ -26,7 +27,11 @@ int melody[] = {
   NOTE_C4, NOTE_G3,NOTE_G3, NOTE_A3, NOTE_G3,0, NOTE_B3, NOTE_C4};
   
 int noteDurations[] = {
-  4, 8, 8, 4,4,4,4,4 };
+  4, 8, 8, 4,4,4,4,4
+};
+  
+boolean showLCD = true;  
+  
 void setup(){
 
   Serial.begin(9600);
@@ -67,6 +72,9 @@ void setup(){
   pinMode(MOTOR_PIN2, OUTPUT);
   pinMode(MOTOR_SLEEP_PIN, OUTPUT);
   
+  
+  pinMode(LCD_OFF_PIN, OUTPUT);
+  
   playTune();
   
   //Motor one direction
@@ -86,7 +94,37 @@ void setup(){
 
 
 void loop(){
-      DateTime now = RTC.now();
+  
+  int setPinState = digitalRead(BUTTON_SET_PIN);
+  int adjustPinState = digitalRead(BUTTON_ADJUST_PIN);
+  int lcdOffPinState = digitalRead(LCD_OFF_PIN);
+  
+  //Press both to play tune
+  if(setPinState == HIGH && adjustPinState == HIGH){
+    turnMotor(false,false);
+    Serial.println("Tune");
+    playTune();
+  
+  } else if(setPinState == HIGH){
+     turnMotor(true,true);
+    Serial.println("Motor on2, setpin");
+    
+  } else if(adjustPinState == HIGH){
+     turnMotor(true,false);  
+      Serial.println("Motor on2, adjust pin");
+    
+  }  else {
+    turnMotor(false,false);
+    Serial.println("Motor off");
+  }
+  
+ if(lcdOffPinState == HIGH){
+    Serial.println("LCD value change");
+    showLCD = !showLCD;
+  }
+  
+  
+     DateTime now = RTC.now();
     
     Serial.print(now.year(), DEC);
     Serial.print('/');
@@ -101,51 +139,37 @@ void loop(){
     Serial.print(now.second(), DEC);
     Serial.println();
     
+
+    display.clearDisplay();
+
+    
+    if(showLCD){
+      Serial.println("Update Display");
+      display.setTextSize(4);
+
+      display.setCursor(0,0);
+      String timeString = generateTimeString(now.hour(), now.minute(), now.second());
+      display.print(timeString);
+      char buff[3];
+
+      display.setCursor(116,22);
+      sprintf(buff, "%02d", now.second());
+      display.setTextSize(1);
+      display.println(buff);
+  
+      display.setTextSize(1);
+      String dateString = generateDateString(now.year(), now.month(), now.day());
+      display.println(dateString);
+
+    } 
+
+    display.display();
+  
+  
   delay(200);
-  display.clearDisplay();
-  display.setTextSize(4);
+  
+  
 
-  display.setCursor(0,0);
-  String timeString = generateTimeString(now.hour(), now.minute(), now.second());
-  display.print(timeString);
-  char buff[3];
-
-  display.setCursor(116,22);
-  sprintf(buff, "%02d", now.second());
-  display.setTextSize(1);
-  display.println(buff);
-  
-  display.setTextSize(1);
-  String dateString = generateDateString(now.year(), now.month(), now.day());
-  display.println(dateString);
-  display.display();
-  
-  
-  
-  
-  
-  
-  int setPinState = digitalRead(BUTTON_SET_PIN);
-  int adjustPinState = digitalRead(BUTTON_ADJUST_PIN);
-  
-  //Press both to play tune
-  if(setPinState == HIGH && adjustPinState == HIGH){
-    turnMotor(false,false);
-    Serial.println("Tune");
-    playTune();
-  
-  } else if(setPinState == HIGH){
-     turnMotor(true,true);
-    Serial.println("Motor on2, setpin");
-    
-  } else  if(adjustPinState == HIGH){
-     turnMotor(true,false);  
-      Serial.println("Motor on2, adjust pin");
-    
-  }  else {
-    turnMotor(false,false);
-    Serial.println("Motor off");
-  }
   
   
 }
