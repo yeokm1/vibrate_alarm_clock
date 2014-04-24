@@ -79,7 +79,7 @@ void loop(){
   int alarmSetButtonState = digitalRead(BUTTON_ALARM_SET_PIN);
   int timeSetButtonState = digitalRead(BUTTON_TIME_SET_PIN);
   int lcdOffPinState = digitalRead(LCD_OFF_PIN);
-  int voltageADCReading = analogRead(VOLTAGE_MEASURE_PIN);
+
   
 
   
@@ -107,7 +107,9 @@ void loop(){
 
     boolean blinkOnForSetting = shouldBlinkNow();
     
-    //Multiply 2 as we are are using a half voltage divider
+   
+    int voltageADCReading = analogRead(VOLTAGE_MEASURE_PIN);
+     //Multiply 2 as we are are using a half voltage divider
     int batteryMilliVolt = ((float) voltageADCReading / ADC_PRECISION) * 2 * VOLTAGE_OF_VCC_MV;
 
     writeDateTimeToDisplayBuffer(now, blinkOnForSetting);
