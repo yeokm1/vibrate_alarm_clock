@@ -21,10 +21,10 @@
 
 #define VOLTAGE_MEASURE_PIN A1
 #define ADC_PRECISION 1024
-#define VOLTAGE_OF_VCC_MV 3310
+#define VOLTAGE_OF_VCC_MV 3310 //You may need to calibrate this
 
-#define MIN_BATTERY_MILLIVOLT 3300
-#define MAX_BATTERY_MILLIVOLT 4300
+#define MIN_BATTERY_MILLIVOLT 3300 //You may need to calibrate this
+#define MAX_BATTERY_MILLIVOLT 4300 //You may need to calibrate this
 
 #define INITIAL_TEXT "Happy 24th birthday\n Jason!\n\nBy: Yeo Kheng Meng\n(14 May 2014)\n\nCompiled on:"
 #define INITIAL_TEXT_DELAY 8000
@@ -37,12 +37,8 @@
 RTC_DS1307 RTC;
 Adafruit_SSD1306 display(OLED_RESET_PIN);
 
-
 typedef enum {NORMAL, ALARM, SETTING_TIME, SETTING_ALARM} CLOCK_STATE ;
 CLOCK_STATE currentState = NORMAL;
-
-#define MIN_YEAR 2014
-#define MAX_YEAR 2050
 
 typedef enum {C_HOUR, C_MINUTE, C_SECOND, C_YEAR, C_MONTH, C_DAY} SETTING_TIME_STATE ;
 SETTING_TIME_STATE settingClockProcess;
@@ -532,18 +528,6 @@ int getNextHourFromCurrentHour(int current){
 int getNextMinSecFromCurrentMinSec(int current){
   return (current + 1) % 60;
 }
-
-
-int getNextYearFromCurrentYear(int current){
-  current++;
-  
-  if(current > MAX_YEAR){
-    current = MIN_YEAR;
-  }
-  
-  return current;
-}
-
 
 void setup(){
 
