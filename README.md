@@ -40,7 +40,7 @@ This schematic only represents the logical connections I made. The physical conn
 Closest components used as Fritzing does not have them.  
 1. MD030A as DRV8833 motor driver. (Pin D7 on the Arduino is connected to the sleep pin on the DRV8833.)  
 2. 128x32 OLED as 128x64 OLED.  
-3. Fio as Fio V3 (Fio's DST Pin = Fio V3's RST Pin)  
+3. Fio as Fio V3 (Fio's DTR Pin = Fio V3's RST Pin)  
 4. RTC module as Chronodot
 
 <b>Stuff to note:</b>
