@@ -44,7 +44,7 @@ unsigned long lastVibration;
 boolean lastMotorDirection;
 
 unsigned long timeLastPressedLeftButton;
-unsigned long timeLastPressedMiddlefButton;
+unsigned long timeLastPressedMiddleButton;
 unsigned long timeLastPressedRightButton;
 
 
@@ -227,11 +227,11 @@ void stopAlarm(){
 void processRightButtonPressed(){
   unsigned long currentMillis = millis();
   
-  if((currentMillis - timeLastPressedLCDOffButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
+  if((currentMillis - timeLastPressedRightButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
     return;
   }
   
-  timeLastPressedLCDOffButton = currentMillis;
+  timeLastPressedRightButton = currentMillis;
   
   Serial.println("LCD Off Button Press");
   
@@ -259,11 +259,11 @@ void processLeftButtonPressed(){
   unsigned long currentMillis = millis();
   
 
-  if((currentMillis - timeLastPressedAlarmSetButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
+  if((currentMillis - timeLastPressedLeftButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
     return;
   }
   
-  timeLastPressedAlarmSetButton = currentMillis;
+  timeLastPressedLeftButton = currentMillis;
   
   Serial.println("Alarm Set Button Pressed");
    
@@ -309,11 +309,11 @@ void processMiddleButtonPressed(){
   unsigned long currentMillis = millis();
   
 
-  if((currentMillis - timeLastPressedTimeSetButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
+  if((currentMillis - timeLastPressedMiddleButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
     return;
   }
    
-  timeLastPressedTimeSetButton = currentMillis;
+  timeLastPressedMiddleButton = currentMillis;
   
   Serial.println("Time Set Button Pressed");
    
@@ -576,9 +576,9 @@ void setup(){
   delay(INITIAL_TEXT_DELAY);
   
 
-  pinMode(BUTTON_ALARM_SET_PIN, INPUT); 
-  pinMode(BUTTON_TIME_SET_PIN, INPUT); 
-  pinMode(LCD_OFF_PIN, INPUT);
+  pinMode(LEFT_BUTTON_PIN, INPUT); 
+  pinMode(MIDDLE_BUTTON_PIN, INPUT); 
+  pinMode(RIGHT_BUTTON_PIN, INPUT);
   pinMode(VOLTAGE_MEASURE_PIN, INPUT);
   
   pinMode(MOTOR_PIN1, OUTPUT); 
