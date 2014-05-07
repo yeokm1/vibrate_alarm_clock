@@ -99,14 +99,35 @@ void loop(){
 
     writeDateTimeToDisplayBuffer(now, blinkOnForSetting);
     writeAlarmToDisplayBuffer(blinkOnForSetting);
-    
-    
     writeVoltageToDisplayBuffer(batteryMilliVolt);
+    writeButtonStateToDisplayBuffer();
     
     
     display.display();
   }
   
+}
+
+
+void writeButtonStateToDisplayBuffer(){
+  
+  String buttonFunction;
+  switch(currentState)
+  {
+  case ALARM: buttonFunction = "Stop  Stop  Stop";
+  break;
+  case NORMAL : buttonFunction = "OLED  Alarm  Time";
+  break;
+  case SETTING_ALARM: 
+  //Fallthrough
+  case SETTING_TIME: buttonFunction = "-   Next   +";
+  break;
+  default: break;
+  }
+  
+  display.setCursor(0,57);
+  display.print(buttonFunction);
+ 
 }
 
 
