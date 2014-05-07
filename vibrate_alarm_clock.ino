@@ -142,7 +142,7 @@ void writeVoltageToDisplayBuffer(int batteryMilliVolt){
   
   int batteryPercent = 100 * (((float)(batteryMilliVolt - MIN_BATTERY_MILLIVOLT)) / batteryRange);
 
-  display.setCursor(104,57);
+  display.setCursor(104,40);
   display.print(batteryPercent);
   display.print("%");
 
