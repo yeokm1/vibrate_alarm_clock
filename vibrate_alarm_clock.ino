@@ -91,17 +91,17 @@ void loop(){
     
     display.clearDisplay();
 
-    boolean blinkOnForSetting = shouldBlinkNow();
+    boolean blinkOn = shouldBlinkNow();
     
    
     int voltageADCReading = analogRead(VOLTAGE_MEASURE_PIN);
      //Multiply 2 as we are are using a half voltage divider
     int batteryMilliVolt = ((float) voltageADCReading / ADC_PRECISION) * 2 * VOLTAGE_OF_VCC_MV;
 
-    writeDateTimeToDisplayBuffer(now, blinkOnForSetting);
-    writeAlarmToDisplayBuffer(blinkOnForSetting);
+    writeDateTimeToDisplayBuffer(now, blinkOn);
+    writeAlarmToDisplayBuffer(blinkOn);
     writeVoltageToDisplayBuffer(batteryMilliVolt);
-    writeButtonStateToDisplayBuffer();
+    writeButtonStateToDisplayBuffer(blinkOn);
     
     
     display.display();
@@ -249,12 +249,18 @@ void processRightButtonPressed(){
 }
 
 
-void writeButtonStateToDisplayBuffer(){
+void writeButtonStateToDisplayBuffer(boolean blinkOn){
   
   String buttonFunction;
   switch(currentState)
   {
-    case ALARM: buttonFunction = "Stop     Stop    Stop";
+    case ALARM: 
+    {
+      if(!blinkOn){
+        buttonFunction = "Stop     Stop    Stop";
+      }
+    
+    }
     break;
     case NORMAL : buttonFunction =  "OLED    Alarm    Time";
     break;
@@ -387,10 +393,7 @@ void writeAlarmToDisplayBuffer(boolean blinkOn){
     }
 
     String alarmTimeString;
-    if(currentState == ALARM && !blinkOn){
-      alarmTimeString = "              ";
-    } else {
-       String alarmSetting;
+    String alarmSetting;
        
     if(currentState == SETTING_ALARM && settingAlarmProcess == A_TYPE && !blinkOn){
      //Now setting this, do not show 
@@ -408,7 +411,7 @@ void writeAlarmToDisplayBuffer(boolean blinkOn){
      }
 
       alarmTimeString = alarmHourString + ":" + alarmMinuteString + alarmSetting;
-    }
+    
     
     
     
