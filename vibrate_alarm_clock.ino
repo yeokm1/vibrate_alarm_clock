@@ -112,6 +112,37 @@ void loop(){
 void processLeftButtonPressed(){
   unsigned long currentMillis = millis();
   
+  if((currentMillis - timeLastPressedRightButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
+    return;
+  }
+  
+  timeLastPressedRightButton = currentMillis;
+  
+  Serial.println("LCD Off Button Press");
+  
+  switch(currentState)
+  {
+  case ALARM: stopAlarm();
+  break;
+  case NORMAL :
+  {
+    showLCD = !showLCD;
+    turnOffLCD();
+  }
+  break;
+  case SETTING_ALARM:
+  break;
+  case SETTING_TIME:
+  break;
+  default: break;
+  }
+  
+  
+}
+
+void processMiddleButtonPressed(){
+  unsigned long currentMillis = millis();
+  
 
   if((currentMillis - timeLastPressedLeftButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
     return;
@@ -158,7 +189,7 @@ void processLeftButtonPressed(){
 }
 
 
-void processMiddleButtonPressed(){
+void processRightButtonPressed(){
   
   unsigned long currentMillis = millis();
   
@@ -215,39 +246,6 @@ void processMiddleButtonPressed(){
     default: break;
   }
 
-}
-
-
-
-void processRightButtonPressed(){
-  unsigned long currentMillis = millis();
-  
-  if((currentMillis - timeLastPressedRightButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
-    return;
-  }
-  
-  timeLastPressedRightButton = currentMillis;
-  
-  Serial.println("LCD Off Button Press");
-  
-  switch(currentState)
-  {
-  case ALARM: stopAlarm();
-  break;
-  case NORMAL :
-  {
-    showLCD = !showLCD;
-    turnOffLCD();
-  }
-  break;
-  case SETTING_ALARM:
-  break;
-  case SETTING_TIME:
-  break;
-  default: break;
-  }
-  
-  
 }
 
 
