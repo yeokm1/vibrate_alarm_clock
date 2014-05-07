@@ -113,12 +113,13 @@ void loop(){
 void writeVoltageToDisplayBuffer(int batteryMilliVolt){
   
   display.setTextSize(1);
-  display.setCursor(98,49);
+
   float voltage = (float) batteryMilliVolt / 1000;
   
   char buff[5];
-  String voltageString = dtostrf(voltage, 4, 2, buff);
+  String voltageString = dtostrf(voltage, 3, 1, buff);
  
+  display.setCursor(104,49);
   display.print(voltageString);
   display.print("V");
   
