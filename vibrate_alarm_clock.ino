@@ -370,38 +370,33 @@ void writeAlarmToDisplayBuffer(boolean blinkOn){
 
     String alarmTimeString;
     if(currentState == ALARM && !blinkOn){
-      alarmTimeString = "      " + alarmHourString + ":" + alarmMinuteString;
+      alarmTimeString = "              ";
     } else {
-      alarmTimeString = "Alarm " + alarmHourString + ":" + alarmMinuteString;
+       String alarmSetting;
+       
+    if(currentState == SETTING_ALARM && settingAlarmProcess == A_TYPE && !blinkOn){
+     //Now setting this, do not show 
+     alarmSetting = "";
+    } else {
+     if(alarmVibrate && alarmSound){
+          alarmSetting = " Ring+Vib"; 
+      } else if(alarmVibrate){
+          alarmSetting = " Vibrate"; 
+      } else if(alarmSound){
+          alarmSetting = " Ring"; 
+      } else {
+        alarmSetting = " Alarm Off";
+      }
+     }
+
+      alarmTimeString = alarmHourString + ":" + alarmMinuteString + alarmSetting;
     }
     
     
     
     display.setCursor(0,49);
     display.println(alarmTimeString);
-    
-    
-    String alarmSetting;
-    
-    if(currentState == SETTING_ALARM && settingAlarmProcess == A_TYPE && !blinkOn){
-     //Now setting this, do not show 
-     alarmSetting = "";
-    } else {
-      if(alarmVibrate && alarmSound){
-          alarmSetting = "(Sound + Vibrate)"; 
-      } else if(alarmVibrate){
-          alarmSetting = "(Vibrate)"; 
-      } else if(alarmSound){
-          alarmSetting = "(Sound)"; 
-      } else {
-        alarmSetting = "(Off)";
-      }
-    }
-    
-  
-    display.println(alarmSetting);
-    
-    
+
 }
 
 void writeDateTimeToDisplayBuffer(DateTime now, boolean blinkOn){
