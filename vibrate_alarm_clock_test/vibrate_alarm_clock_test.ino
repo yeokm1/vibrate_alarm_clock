@@ -4,28 +4,12 @@
 #include <Adafruit_SSD1306.h>
 #include <RTClib.h>
 #include <RTC_DS1307.h>
+#include "constants.h"
 #include "pitches.h"
 
 
-#define BUTTON_SET_PIN A4
-#define BUTTON_ADJUST_PIN A5
-
-#define MOTOR_PIN1 A3
-#define MOTOR_PIN2 A2
-#define MOTOR_SLEEP_PIN 7 //D7
-#define LCD_OFF_PIN 6 //D6
-
-#define SPEAKER_PIN 9 //D9
-
-#define RXLED 17
-#define OLED_RESET A0
-
-#define VOLTAGE_MEASURE_PIN A1
-#define ADC_PRECISION 1024
-#define VOLTAGE_OF_VCC_MV 3310
-
 RTC_DS1307 RTC;
-Adafruit_SSD1306 display(OLED_RESET);
+Adafruit_SSD1306 display(OLED_RESET_PIN);
 
 int melody[] = {
   NOTE_C4, NOTE_G3,NOTE_G3, NOTE_A3, NOTE_G3,0, NOTE_B3, NOTE_C4};
@@ -41,8 +25,8 @@ void setup(){
   Serial.begin(9600);
   
  //Turn off TX and RX pin
-  pinMode(RXLED, OUTPUT);
-  digitalWrite(RXLED, LOW);
+  pinMode(RXLED_PIN, OUTPUT);
+  digitalWrite(RXLED_PIN, LOW);
   TXLED1;
   
   
@@ -68,8 +52,8 @@ void setup(){
     RTC.adjust(DateTime(__DATE__, __TIME__));
   } 
   
-  pinMode(BUTTON_SET_PIN, INPUT); 
-  pinMode(BUTTON_ADJUST_PIN, INPUT); 
+  pinMode(BUTTON_ALARM_SET_PIN, INPUT); 
+  pinMode(BUTTON_TIME_SET_PIN, INPUT); 
   pinMode(LCD_OFF_PIN, INPUT);
   pinMode(VOLTAGE_MEASURE_PIN, INPUT);
   
@@ -102,8 +86,8 @@ void setup(){
 
 void loop(){
   
-  int setPinState = digitalRead(BUTTON_SET_PIN);
-  int adjustPinState = digitalRead(BUTTON_ADJUST_PIN);
+  int setPinState = digitalRead(BUTTON_ALARM_SET_PIN);
+  int adjustPinState = digitalRead(BUTTON_TIME_SET_PIN);;
   int lcdOffPinState = digitalRead(LCD_OFF_PIN);
   int voltageADCReading = analogRead(VOLTAGE_MEASURE_PIN);
   
