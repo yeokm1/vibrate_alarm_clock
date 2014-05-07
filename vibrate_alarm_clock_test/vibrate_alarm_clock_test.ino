@@ -52,9 +52,9 @@ void setup(){
     RTC.adjust(DateTime(__DATE__, __TIME__));
   } 
   
-  pinMode(BUTTON_ALARM_SET_PIN, INPUT); 
-  pinMode(BUTTON_TIME_SET_PIN, INPUT); 
-  pinMode(LCD_OFF_PIN, INPUT);
+  pinMode(LEFT_BUTTON_PIN, INPUT); 
+  pinMode(MIDDLE_BUTTON_PIN, INPUT); 
+  pinMode(RIGHT_BUTTON_PIN, INPUT);
   pinMode(VOLTAGE_MEASURE_PIN, INPUT);
   
   
@@ -86,22 +86,22 @@ void setup(){
 
 void loop(){
   
-  int setPinState = digitalRead(BUTTON_ALARM_SET_PIN);
-  int adjustPinState = digitalRead(BUTTON_TIME_SET_PIN);;
-  int lcdOffPinState = digitalRead(LCD_OFF_PIN);
+  int leftPinState = digitalRead(LEFT_BUTTON_PIN);
+  int middlePinState = digitalRead(MIDDLE_BUTTON_PIN);;
+  int rightPinState = digitalRead(RIGHT_BUTTON_PIN);
   int voltageADCReading = analogRead(VOLTAGE_MEASURE_PIN);
   
   //Press both to play tune
-  if(setPinState == HIGH && adjustPinState == HIGH){
+  if(leftPinState == HIGH && middlePinState == HIGH){
     turnMotor(false,false);
     Serial.println("Tune");
     playTune();
   
-  } else if(setPinState == HIGH){
+  } else if(leftPinState == HIGH){
      turnMotor(true,true);
     Serial.println("Motor on2, setpin");
     
-  } else if(adjustPinState == HIGH){
+  } else if(middlePinState == HIGH){
      turnMotor(true,false);  
       Serial.println("Motor on2, adjust pin");
     
@@ -110,7 +110,7 @@ void loop(){
     Serial.println("Motor off");
   }
   
- if(lcdOffPinState == HIGH){
+ if(rightPinState == HIGH){
     Serial.println("LCD value change");
     showLCD = !showLCD;
   }
