@@ -128,9 +128,37 @@ void processLeftButtonPressed(){
   {
     showLCD = !showLCD;
     turnOffLCD();
+    
   }
   break;
   case SETTING_ALARM:
+  {
+   if(settingAlarmProcess == A_HOUR){
+       alarmHour = getNextHourFromCurrentHour(alarmHour, false);
+    } else if(settingAlarmProcess == A_MINUTE){
+       alarmMinute = getNextMinSecFromCurrentMinSec(alarmMinute, false);
+    } else if(settingAlarmProcess == A_TYPE){
+              
+       if(!alarmVibrate && !alarmSound){
+            //Both off, turn on sound
+          alarmVibrate = true;
+          alarmSound = true;
+       } else if(!alarmVibrate && alarmSound){
+          //Vibrate off, alarm on, turn on vibrate only
+          alarmVibrate = false;
+          alarmSound = false;
+       } else if(alarmVibrate && !alarmSound){
+         //Vibrate on, alarm off, turn on both
+         alarmVibrate = false;
+         alarmSound = true;  
+       } else {
+          //Both are on, turn both off
+          alarmVibrate = true;
+          alarmSound = false;  
+      }
+   }
+  
+  }
   break;
   case SETTING_TIME:
   break;
@@ -216,9 +244,9 @@ void processRightButtonPressed(){
     case SETTING_ALARM:
     {
         if(settingAlarmProcess == A_HOUR){
-          alarmHour = getNextHourFromCurrentHour(alarmHour);
+          alarmHour = getNextHourFromCurrentHour(alarmHour, true);
         } else if(settingAlarmProcess == A_MINUTE){
-          alarmMinute = getNextMinSecFromCurrentMinSec(alarmMinute);
+          alarmMinute = getNextMinSecFromCurrentMinSec(alarmMinute, true);
         } else if(settingAlarmProcess == A_TYPE){
               
           if(!alarmVibrate && !alarmSound){
@@ -528,12 +556,32 @@ boolean shouldBlinkNow(){
   return previousBlinkState;
 }
 
-int getNextHourFromCurrentHour(int current){
-  return (current + 1) % 24;
+int getNextHourFromCurrentHour(int current, boolean increment){
+  int change;
+  if(increment){
+    change = 1;
+  } else {
+    change = -1;
+  }
+  
+  int newValue = current + change;
+  
+  //To produce positive modulo result
+  return (newValue % 24 + 24) % 24;
 }
 
-int getNextMinSecFromCurrentMinSec(int current){
-  return (current + 1) % 60;
+int getNextMinSecFromCurrentMinSec(int current, boolean increment){
+    int change;
+  if(increment){
+    change = 1;
+  } else {
+    change = -1;
+  }
+  
+  int newValue = current + change;
+  
+  //To produce positive modulo result
+  return (newValue % 60 + 60) % 60;
 }
 
 void setup(){
