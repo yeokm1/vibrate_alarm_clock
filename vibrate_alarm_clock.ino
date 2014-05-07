@@ -109,6 +109,147 @@ void loop(){
   
 }
 
+void processLeftButtonPressed(){
+  unsigned long currentMillis = millis();
+  
+
+  if((currentMillis - timeLastPressedLeftButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
+    return;
+  }
+  
+  timeLastPressedLeftButton = currentMillis;
+  
+  Serial.println("Alarm Set Button Pressed");
+   
+  switch(currentState)
+  {
+    case ALARM: stopAlarm();
+    break;
+    case NORMAL :
+    {
+      if(showLCD){
+        currentState = SETTING_ALARM;
+        settingAlarmProcess = A_HOUR;
+      } else {
+        showLCD = true;
+      }
+
+    }
+    break;
+    case SETTING_ALARM:
+    {
+      if(settingAlarmProcess == A_HOUR){
+         settingAlarmProcess = A_MINUTE;
+      } else if(settingAlarmProcess == A_MINUTE){
+         settingAlarmProcess = A_TYPE;
+      } else {
+        currentState = NORMAL;
+      }
+
+    }
+    break;
+    case SETTING_TIME:
+    break;
+    default: break;
+    }
+  
+
+
+}
+
+
+void processMiddleButtonPressed(){
+  
+  unsigned long currentMillis = millis();
+  
+
+  if((currentMillis - timeLastPressedMiddleButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
+    return;
+  }
+   
+  timeLastPressedMiddleButton = currentMillis;
+  
+  Serial.println("Time Set Button Pressed");
+   
+  switch(currentState)
+  {
+    case ALARM: stopAlarm();
+    break;
+    case NORMAL :
+   { 
+      if(!showLCD){
+        showLCD = true;
+      }
+   }
+    break;
+    case SETTING_ALARM:
+    {
+        if(settingAlarmProcess == A_HOUR){
+          alarmHour = getNextHourFromCurrentHour(alarmHour);
+        } else if(settingAlarmProcess == A_MINUTE){
+          alarmMinute = getNextMinSecFromCurrentMinSec(alarmMinute);
+        } else if(settingAlarmProcess == A_TYPE){
+              
+          if(!alarmVibrate && !alarmSound){
+                //Both off, turn on sound
+                alarmVibrate = false;
+                alarmSound = true;
+              } else if(!alarmVibrate && alarmSound){
+                //Vibrate off, alarm on, turn on vibrate only
+                alarmVibrate = true;
+                alarmSound = false;
+              } else if(alarmVibrate && !alarmSound){
+              //Vibrate on, alarm off, turn on both
+                alarmVibrate = true;
+                alarmSound = true;  
+              } else {
+                //Both are on, turn both off
+                alarmVibrate = false;
+                alarmSound = false;  
+              }
+        }
+    }
+    break;
+    case SETTING_TIME:
+    break;
+    default: break;
+  }
+
+}
+
+
+
+void processRightButtonPressed(){
+  unsigned long currentMillis = millis();
+  
+  if((currentMillis - timeLastPressedRightButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
+    return;
+  }
+  
+  timeLastPressedRightButton = currentMillis;
+  
+  Serial.println("LCD Off Button Press");
+  
+  switch(currentState)
+  {
+  case ALARM: stopAlarm();
+  break;
+  case NORMAL :
+  {
+    showLCD = !showLCD;
+    turnOffLCD();
+  }
+  break;
+  case SETTING_ALARM:
+  break;
+  case SETTING_TIME:
+  break;
+  default: break;
+  }
+  
+  
+}
+
 
 void writeButtonStateToDisplayBuffer(){
   
@@ -220,150 +361,6 @@ void stopAlarm(){
   
   turnOffLCD();
   
-}
-
-
-
-void processRightButtonPressed(){
-  unsigned long currentMillis = millis();
-  
-  if((currentMillis - timeLastPressedRightButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
-    return;
-  }
-  
-  timeLastPressedRightButton = currentMillis;
-  
-  Serial.println("LCD Off Button Press");
-  
-  switch(currentState)
-  {
-  case ALARM: stopAlarm();
-  break;
-  case NORMAL :
-  {
-    showLCD = !showLCD;
-    turnOffLCD();
-  }
-  break;
-  case SETTING_ALARM:
-  break;
-  case SETTING_TIME:
-  break;
-  default: break;
-  }
-  
-  
-}
-
-void processLeftButtonPressed(){
-  unsigned long currentMillis = millis();
-  
-
-  if((currentMillis - timeLastPressedLeftButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
-    return;
-  }
-  
-  timeLastPressedLeftButton = currentMillis;
-  
-  Serial.println("Alarm Set Button Pressed");
-   
-  switch(currentState)
-  {
-    case ALARM: stopAlarm();
-    break;
-    case NORMAL :
-    {
-      if(showLCD){
-        currentState = SETTING_ALARM;
-        settingAlarmProcess = A_HOUR;
-      } else {
-        showLCD = true;
-      }
-
-    }
-    break;
-    case SETTING_ALARM:
-    {
-      if(settingAlarmProcess == A_HOUR){
-         settingAlarmProcess = A_MINUTE;
-      } else if(settingAlarmProcess == A_MINUTE){
-         settingAlarmProcess = A_TYPE;
-      } else {
-        currentState = NORMAL;
-      }
-
-    }
-    break;
-    case SETTING_TIME:
-    break;
-    default: break;
-    }
-  
-
-
-}
-
-
-void processMiddleButtonPressed(){
-  
-  unsigned long currentMillis = millis();
-  
-
-  if((currentMillis - timeLastPressedMiddleButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
-    return;
-  }
-   
-  timeLastPressedMiddleButton = currentMillis;
-  
-  Serial.println("Time Set Button Pressed");
-   
-  switch(currentState)
-  {
-    case ALARM: stopAlarm();
-    break;
-    case NORMAL :
-   { 
-      if(!showLCD){
-        showLCD = true;
-      }
-   }
-    break;
-    case SETTING_ALARM:
-    {
-        if(settingAlarmProcess == A_HOUR){
-          alarmHour = getNextHourFromCurrentHour(alarmHour);
-        } else if(settingAlarmProcess == A_MINUTE){
-          alarmMinute = getNextMinSecFromCurrentMinSec(alarmMinute);
-        } else if(settingAlarmProcess == A_TYPE){
-              
-          if(!alarmVibrate && !alarmSound){
-                //Both off, turn on sound
-                alarmVibrate = false;
-                alarmSound = true;
-              } else if(!alarmVibrate && alarmSound){
-                //Vibrate off, alarm on, turn on vibrate only
-                alarmVibrate = true;
-                alarmSound = false;
-              } else if(alarmVibrate && !alarmSound){
-              //Vibrate on, alarm off, turn on both
-                alarmVibrate = true;
-                alarmSound = true;  
-              } else {
-                //Both are on, turn both off
-                alarmVibrate = false;
-                alarmSound = false;  
-              }
-        }
-    }
-    break;
-    case SETTING_TIME:
-    break;
-    default: break;
-  }
-  
-  
-
-
 }
 
 
