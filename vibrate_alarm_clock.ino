@@ -294,7 +294,7 @@ void writeButtonStateToDisplayBuffer(boolean blinkOn){
     break;
     case SETTING_ALARM: 
     //Fallthrough
-    case SETTING_TIME: buttonFunction = "---      Next     +++";
+    case SETTING_TIME: buttonFunction = "--       Next      ++";
     break;
     default: break;
   }
