@@ -137,12 +137,12 @@ void writeVoltageToDisplayBuffer(int batteryMilliVolt){
 
   float voltage = (float) batteryMilliVolt / 1000;
   
-  char buff[5];
-  String voltageString = dtostrf(voltage, 3, 1, buff);
- 
-  display.setCursor(104,49);
-  display.print(voltageString);
-  display.print("V");
+//  char buff[5];
+//  String voltageString = dtostrf(voltage, 3, 1, buff);
+// 
+//  display.setCursor(104,49);
+//  display.print(voltageString);
+//  display.print("V");
   
   int batteryRange = MAX_BATTERY_MILLIVOLT - MIN_BATTERY_MILLIVOLT;
   
@@ -416,7 +416,7 @@ void writeAlarmToDisplayBuffer(boolean blinkOn){
     
     
     
-    display.setCursor(0,49);
+    display.setCursor(0,47);
     display.println(alarmTimeString);
 
 }
