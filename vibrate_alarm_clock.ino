@@ -43,9 +43,10 @@ unsigned long alarmLastStarted;
 unsigned long lastVibration;
 boolean lastMotorDirection;
 
-unsigned long timeLastPressedAlarmSetButton;
-unsigned long timeLastPressedTimeSetButton;
-unsigned long timeLastPressedLCDOffButton;
+unsigned long timeLastPressedLeftButton;
+unsigned long timeLastPressedMiddlefButton;
+unsigned long timeLastPressedRightButton;
+
 
 boolean previousBlinkState;
 unsigned long previousBlinkTime;
@@ -59,20 +60,20 @@ boolean showLCD = true;
 
 void loop(){
     
-  int alarmSetButtonState = digitalRead(BUTTON_ALARM_SET_PIN);
-  int timeSetButtonState = digitalRead(BUTTON_TIME_SET_PIN);
-  int lcdOffPinState = digitalRead(LCD_OFF_PIN);
+  int leftButtonState = digitalRead(LEFT_BUTTON_PIN);
+  int middleButtonState = digitalRead(MIDDLE_BUTTON_PIN);
+  int rightPinState = digitalRead(RIGHT_BUTTON_PIN);
 
-  if(alarmSetButtonState == HIGH){
-    processAlarmSetButtonPressed();
+  if(leftButtonState == HIGH){
+    processLeftButtonPressed();
   }
   
-  if(timeSetButtonState == HIGH){
-    processTimeSetButtonPressed();
+  if(middleButtonState == HIGH){
+    processMiddleButtonPressed();
   }
   
-  if(lcdOffPinState == HIGH){
-    processLCDOffButtonPressed();
+  if(rightPinState == HIGH){
+    processRightButtonPressed();
   }
  
   DateTime now = RTC.now();
@@ -223,7 +224,7 @@ void stopAlarm(){
 
 
 
-void processLCDOffButtonPressed(){
+void processRightButtonPressed(){
   unsigned long currentMillis = millis();
   
   if((currentMillis - timeLastPressedLCDOffButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
@@ -254,7 +255,7 @@ void processLCDOffButtonPressed(){
   
 }
 
-void processAlarmSetButtonPressed(){
+void processLeftButtonPressed(){
   unsigned long currentMillis = millis();
   
 
@@ -303,7 +304,7 @@ void processAlarmSetButtonPressed(){
 }
 
 
-void processTimeSetButtonPressed(){
+void processMiddleButtonPressed(){
   
   unsigned long currentMillis = millis();
   

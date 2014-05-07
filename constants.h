@@ -1,6 +1,6 @@
-#define BUTTON_ALARM_SET_PIN A4
-#define BUTTON_TIME_SET_PIN A5
-#define LCD_OFF_PIN 6 //D6
+#define LEFT_BUTTON_PIN A4
+#define MIDDLE_BUTTON_PIN A5
+#define RIGHT_BUTTON_PIN 6 //D6
 
 #define MOTOR_PIN1 A3
 #define MOTOR_PIN2 A2
