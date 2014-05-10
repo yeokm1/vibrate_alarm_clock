@@ -26,7 +26,7 @@ Adafruit_SSD1306 display(OLED_RESET_PIN);
 typedef enum {NORMAL, ALARM, SETTING_TIME, SETTING_ALARM} CLOCK_STATE ;
 CLOCK_STATE currentState = NORMAL;
 
-typedef enum {T_HOUR, T_MINUTE, T_SECOND, T_YEAR, T_MONTH, T_DAY} SETTING_TIME_STATE ;
+typedef enum {T_HOUR, T_MINUTE, T_SECOND, T_DAY, T_MONTH, T_YEAR} SETTING_TIME_STATE ;
 SETTING_TIME_STATE settingTimeProcess;
 
 typedef enum {A_HOUR, A_MINUTE, A_TYPE} SETTING_ALARM_STATE ;
@@ -161,6 +161,34 @@ void processLeftButtonPressed(){
   }
   break;
   case SETTING_TIME:
+  {
+    DateTime now = RTC.now();
+    DateTime newTime;
+    switch(settingTimeProcess){
+      case T_HOUR:
+        newTime = DateTime(now.year(), now.month(), now.day(), getNextHourFromCurrentHour(now.hour(), false), now.minute(), now.second());
+        break;
+      case T_MINUTE:
+        newTime = DateTime(now.year(), now.month(), now.day(), now.hour(), getNextMinSecFromCurrentMinSec(now.minute(), false), now.second());
+        break;
+      case T_SECOND:
+        newTime = DateTime(now.year(), now.month(), now.day(), now.hour(), now.minute(), getNextMinSecFromCurrentMinSec(now.second(), false));
+        break;
+      case T_DAY:
+        newTime = DateTime(now.year(), now.month(), now.day() - 1, now.hour(), now.minute(), now.second());
+        break;
+      case T_MONTH:
+        newTime = DateTime(now.year(), now.month() - 1, now.day(), now.hour(), now.minute(), now.second());
+        break;
+      case T_YEAR:
+        newTime = DateTime(now.year() - 1, now.month(), now.day(), now.hour(), now.minute(), now.second());
+        break;
+      default: break;
+     
+    }
+       
+    RTC.adjust(newTime);
+  }
   break;
   default: break;
   }
@@ -290,6 +318,36 @@ void processRightButtonPressed(){
     }
     break;
     case SETTING_TIME:
+      {
+    DateTime now = RTC.now();
+    DateTime newTime;
+    switch(settingTimeProcess){
+      case T_HOUR:
+        newTime = DateTime(now.year(), now.month(), now.day(), getNextHourFromCurrentHour(now.hour(), true), now.minute(), now.second());
+        break;
+      case T_MINUTE:
+        newTime = DateTime(now.year(), now.month(), now.day(), now.hour(), getNextMinSecFromCurrentMinSec(now.minute(), true), now.second());
+        break;
+      case T_SECOND:
+        newTime = DateTime(now.year(), now.month(), now.day(), now.hour(), now.minute(), getNextMinSecFromCurrentMinSec(now.second(), true));
+        break;
+      case T_DAY:
+        newTime = DateTime(now.year(), now.month(), now.day() + 1, now.hour(), now.minute(), now.second());
+        break;
+      case T_MONTH:
+        newTime = DateTime(now.year(), now.month() + 1, now.day(), now.hour(), now.minute(), now.second());
+        break;
+      case T_YEAR:
+        newTime = DateTime(now.year() + 1, now.month(), now.day(), now.hour(), now.minute(), now.second());
+        break;
+      default: break;
+     
+    }
+       
+    RTC.adjust(newTime);
+  }
+    
+    
     break;
     default: break;
   }
@@ -531,7 +589,9 @@ String generateDateString(int year, int month, int day, boolean blinkOn)
   if(currentState == SETTING_TIME && settingTimeProcess == T_DAY && !blinkOn){
     dayString = "  ";
   } else {
-    dayString = String(day);
+    char buff[3];
+    sprintf(buff, "%02d", day);
+    dayString = buff;
   }
   
   if(currentState == SETTING_TIME && settingTimeProcess == T_MONTH && !blinkOn){
