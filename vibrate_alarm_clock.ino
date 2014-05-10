@@ -26,8 +26,8 @@ Adafruit_SSD1306 display(OLED_RESET_PIN);
 typedef enum {NORMAL, ALARM, SETTING_TIME, SETTING_ALARM} CLOCK_STATE ;
 CLOCK_STATE currentState = NORMAL;
 
-typedef enum {C_HOUR, C_MINUTE, C_SECOND, C_YEAR, C_MONTH, C_DAY} SETTING_TIME_STATE ;
-SETTING_TIME_STATE settingClockProcess;
+typedef enum {T_HOUR, T_MINUTE, T_SECOND, T_YEAR, T_MONTH, T_DAY} SETTING_TIME_STATE ;
+SETTING_TIME_STATE settingTimeProcess;
 
 typedef enum {A_HOUR, A_MINUTE, A_TYPE} SETTING_ALARM_STATE ;
 SETTING_ALARM_STATE settingAlarmProcess;
@@ -112,13 +112,13 @@ void loop(){
 void processLeftButtonPressed(){
   unsigned long currentMillis = millis();
   
-  if((currentMillis - timeLastPressedRightButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
+  if((currentMillis - timeLastPressedLeftButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
     return;
   }
   
-  timeLastPressedRightButton = currentMillis;
+  timeLastPressedLeftButton = currentMillis;
   
-  Serial.println("LCD Off Button Press");
+  Serial.println("Left Button Press");
   
   switch(currentState)
   {
@@ -172,13 +172,13 @@ void processMiddleButtonPressed(){
   unsigned long currentMillis = millis();
   
 
-  if((currentMillis - timeLastPressedLeftButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
+  if((currentMillis - timeLastPressedMiddleButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
     return;
   }
   
-  timeLastPressedLeftButton = currentMillis;
+  timeLastPressedMiddleButton = currentMillis;
   
-  Serial.println("Alarm Set Button Pressed");
+  Serial.println("Middle Button Pressed");
    
   switch(currentState)
   {
@@ -208,6 +208,22 @@ void processMiddleButtonPressed(){
     }
     break;
     case SETTING_TIME:
+    {
+      if(settingTimeProcess == T_HOUR){
+         settingTimeProcess = T_MINUTE;
+      } else if(settingTimeProcess == T_MINUTE){
+         settingTimeProcess = T_SECOND;
+      } else if(settingTimeProcess == T_SECOND){
+         settingTimeProcess = T_DAY;      
+      } else if(settingTimeProcess == T_DAY){
+        settingTimeProcess = T_MONTH; 
+      } else if(settingTimeProcess == T_MONTH){
+         settingTimeProcess = T_YEAR;           
+      } else {
+        currentState = NORMAL;
+      }
+      
+    }
     break;
     default: break;
     }
@@ -222,13 +238,13 @@ void processRightButtonPressed(){
   unsigned long currentMillis = millis();
   
 
-  if((currentMillis - timeLastPressedMiddleButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
+  if((currentMillis - timeLastPressedRightButton) < MIN_TIME_BETWEEN_BUTTON_PRESSES){
     return;
   }
    
-  timeLastPressedMiddleButton = currentMillis;
+  timeLastPressedRightButton = currentMillis;
   
-  Serial.println("Time Set Button Pressed");
+  Serial.println("Right Set Button Pressed");
    
   switch(currentState)
   {
@@ -236,9 +252,13 @@ void processRightButtonPressed(){
     break;
     case NORMAL :
    { 
-      if(!showLCD){
+      if(showLCD){
+        currentState = SETTING_TIME;
+        settingTimeProcess = T_HOUR;
+      } else {
         showLCD = true;
       }
+      
    }
     break;
     case SETTING_ALARM:
@@ -451,44 +471,84 @@ void writeAlarmToDisplayBuffer(boolean blinkOn){
 void writeDateTimeToDisplayBuffer(DateTime now, boolean blinkOn){
   display.setTextSize(4);
   display.setCursor(0,0);
-  String timeString = generateTimeString(now.hour(), now.minute(), now.second());
+  String timeString = generateTimeString(now.hour(), now.minute(), now.second(), blinkOn);
   display.print(timeString);
+  
   char buff[3];
 
-  display.setCursor(116,22);
-  sprintf(buff, "%02d", now.second());
-  display.setTextSize(1);
-  display.println(buff);
+
+  if(!(currentState == SETTING_TIME && settingTimeProcess == T_SECOND && !blinkOn)){
+    display.setCursor(116,22);
+    sprintf(buff, "%02d", now.second());
+    display.setTextSize(1);
+    display.println(buff);
+  }
   
-  
+
   display.setCursor(0,34);
   display.setTextSize(1);
-  String dateString = generateDateString(now.year(), now.month(), now.day());
+  String dateString = generateDateString(now.year(), now.month(), now.day(), blinkOn);
   display.println(dateString);
 
 }
 
 
 
-String generateTimeString(int hour, int minute, int second){
+String generateTimeString(int hour, int minute, int second, boolean blinkOn){
   char buff[3];
+  
+  String hourString;
+  
+  if(currentState == SETTING_TIME && settingTimeProcess == T_HOUR && !blinkOn){
+    hourString = "  ";
+  } else {
+    sprintf(buff, "%02d", hour);
+    hourString = buff;
+  }
 
-  sprintf(buff, "%02d", hour);
-  String hourString = buff;
+  String minuteString;
+  if(currentState == SETTING_TIME && settingTimeProcess == T_MINUTE && !blinkOn){
+    minuteString = "  ";
+  } else {
+    sprintf(buff, "%02d", minute);
+    minuteString = buff;
+  }
 
-  sprintf(buff, "%02d", minute);
-  String minuteString = buff;
- 
+
   String result = hourString + ":" + minuteString;
 
   return result;
 }
 
-String generateDateString(int year, int month, int day)
+String generateDateString(int year, int month, int day, boolean blinkOn)
 {
-  String dayOfWeek = getDayOfTheWeek(year, month, day);  
-  String monthString = getMonth(month);
-  String result = dayOfWeek + ", " + day + " " + monthString + " " + year;
+  String dayOfWeek = getDayOfTheWeek(year, month, day);
+  String dayString;
+  String monthString;
+  String yearString;
+  
+  
+  if(currentState == SETTING_TIME && settingTimeProcess == T_DAY && !blinkOn){
+    dayString = "  ";
+  } else {
+    dayString = String(day);
+  }
+  
+  if(currentState == SETTING_TIME && settingTimeProcess == T_MONTH && !blinkOn){
+    monthString = "   ";
+  } else {
+    monthString = getMonth(month);
+  }
+  
+  if(currentState == SETTING_TIME && settingTimeProcess == T_YEAR && !blinkOn){
+    yearString = "    ";
+  } else {
+    yearString = String(year);
+  }
+  
+  
+ 
+  String result = dayOfWeek + ", " + dayString + " " + monthString + " " + yearString;
   
   return result;
 }
