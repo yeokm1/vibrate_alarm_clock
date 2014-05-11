@@ -429,7 +429,7 @@ void writeVoltageToDisplayBuffer(int batteryMilliVolt){
   
   int batteryRange = MAX_BATTERY_MILLIVOLT - MIN_BATTERY_MILLIVOLT;
 
-  //Cast to long as Arduino int is only 16 bits wide. Not enough to
+  //Cast to long as Arduino int is only 16 bits wide. Not enough to hold this result
   long numerator =  ((long) ((batteryMilliVolt - MIN_BATTERY_MILLIVOLT))) * 100;
   int batteryPercent = numerator / batteryRange;
 
