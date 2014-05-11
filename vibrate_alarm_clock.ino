@@ -12,7 +12,7 @@
 #define MIN_BATTERY_MILLIVOLT 3300 //You may need to calibrate this
 #define MAX_BATTERY_MILLIVOLT 4300 //You may need to calibrate this
 
-#define INITIAL_TEXT "Happy 24th birthday\n Jason!\n\nBy: Yeo Kheng Meng\n(14 May 2014)"
+#define INITIAL_TEXT "Happy 24th birthday\n Jason!\n\nBy: Yeo Kheng Meng\n(2014)"
 #define INITIAL_TEXT_DELAY 8000
 #define MIN_TIME_BETWEEN_BUTTON_PRESSES 100  //Debouncing purposes
 #define BLINK_INTERVAL 100
