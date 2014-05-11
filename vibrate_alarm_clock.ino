@@ -12,10 +12,14 @@
 #define MIN_BATTERY_MILLIVOLT 3300 //You may need to calibrate this
 #define MAX_BATTERY_MILLIVOLT 4300 //You may need to calibrate this
 
+#define DISPLAY_CONTRAST 64
+
 #define INITIAL_TEXT "Happy 24th birthday\n Jason!\n\nBy: Yeo Kheng Meng\n(2014)"
 #define INITIAL_TEXT_DELAY 8000
 #define MIN_TIME_BETWEEN_BUTTON_PRESSES 100  //Debouncing purposes
 #define BLINK_INTERVAL 100
+
+
 
 #define MIN_TIME_BETWEEN_ALARM_STARTS 60000 //60 seconds
 #define MIN_TIME_TO_CHANGE_MOTOR_DIRECTION 1500
@@ -414,7 +418,7 @@ void writeVoltageToDisplayBuffer(int batteryMilliVolt){
   
   display.setTextSize(1);
 
-  float voltage = (float) batteryMilliVolt / 1000;
+//  float voltage = (float) batteryMilliVolt / 1000;
   
 //  char buff[5];
 //  String voltageString = dtostrf(voltage, 3, 1, buff);
@@ -424,9 +428,10 @@ void writeVoltageToDisplayBuffer(int batteryMilliVolt){
 //  display.print("V");
   
   int batteryRange = MAX_BATTERY_MILLIVOLT - MIN_BATTERY_MILLIVOLT;
-  
-  int batteryPercent = 100 * (((float)(batteryMilliVolt - MIN_BATTERY_MILLIVOLT)) / batteryRange);
-  
+
+  long numerator =  ((long) ((batteryMilliVolt - MIN_BATTERY_MILLIVOLT))) * 100;
+  int batteryPercent = numerator / batteryRange;
+
   if(batteryPercent < 100){
      display.setCursor(110,40);
   } else {
@@ -759,6 +764,8 @@ void setup(){
   // initialize with the OLED with I2C addr 0x3D (for the 128x64)
   display.begin(SSD1306_SWITCHCAPVCC, 0x3D); 
   
+  display.dim(DISPLAY_CONTRAST);
+  
   display.clearDisplay();
   display.setTextColor(WHITE);
   display.setTextSize(1);
@@ -767,6 +774,7 @@ void setup(){
  
   
   display.display();
+  
   
   delay(INITIAL_TEXT_DELAY);
   
