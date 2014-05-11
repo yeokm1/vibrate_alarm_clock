@@ -178,7 +178,16 @@ void processLeftButtonPressed(){
         newTime = DateTime(now.year(), now.month(), now.day() - 1, now.hour(), now.minute(), now.second());
         break;
       case T_MONTH:
-        newTime = DateTime(now.year(), now.month() - 1, now.day(), now.hour(), now.minute(), now.second());
+      {
+        int month = now.month();
+        if(month == 1){
+          month = 12;
+        } else {
+          month--;
+        }
+      
+        newTime = DateTime(now.year(), month, now.day(), now.hour(), now.minute(), now.second());
+      }
         break;
       case T_YEAR:
         newTime = DateTime(now.year() - 1, now.month(), now.day(), now.hour(), now.minute(), now.second());
@@ -335,7 +344,15 @@ void processRightButtonPressed(){
         newTime = DateTime(now.year(), now.month(), now.day() + 1, now.hour(), now.minute(), now.second());
         break;
       case T_MONTH:
-        newTime = DateTime(now.year(), now.month() + 1, now.day(), now.hour(), now.minute(), now.second());
+      {
+        int month = now.month();
+        if(month == 12){
+          month = 1;
+        } else {
+          month++;
+        }
+        newTime = DateTime(now.year(), month, now.day(), now.hour(), now.minute(), now.second());
+      }
         break;
       case T_YEAR:
         newTime = DateTime(now.year() + 1, now.month(), now.day(), now.hour(), now.minute(), now.second());
