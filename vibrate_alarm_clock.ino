@@ -115,6 +115,7 @@ void loop(){
     display.display();
   }
   
+  //Only power down in normal mode, the rest of the time, at max performance
   if(currentState == NORMAL) {
       LowPower.powerDown(SLEEP_30MS, ADC_OFF, BOD_OFF);
   }
