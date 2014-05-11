@@ -7,6 +7,8 @@
 #include "constants.h"
 #include "tune.h"
 
+#define DO_NOT_SHOW_SERIAL_OUT //Comment this line if you want serial debugging for button press
+
 #define MIN_BATTERY_MILLIVOLT 3300 //You may need to calibrate this
 #define MAX_BATTERY_MILLIVOLT 4300 //You may need to calibrate this
 
@@ -118,8 +120,12 @@ void processLeftButtonPressed(){
   
   timeLastPressedLeftButton = currentMillis;
   
-  Serial.println("Left Button Press");
-  
+
+ #ifndef DO_NOT_SHOW_SERIAL_OUT
+   Serial.println("Left Button Press");
+ #endif
+ 
+ 
   switch(currentState)
   {
   case ALARM: stopAlarm();
@@ -214,8 +220,10 @@ void processMiddleButtonPressed(){
   }
   
   timeLastPressedMiddleButton = currentMillis;
-  
-  Serial.println("Middle Button Pressed");
+
+ #ifndef DO_NOT_SHOW_SERIAL_OUT
+   Serial.println("Middle Button Pressed");
+ #endif
    
   switch(currentState)
   {
@@ -280,8 +288,10 @@ void processRightButtonPressed(){
   }
    
   timeLastPressedRightButton = currentMillis;
-  
-  Serial.println("Right Set Button Pressed");
+
+  #ifndef DO_NOT_SHOW_SERIAL_OUT
+   Serial.println("Right Set Button Pressed");
+  #endif
    
   switch(currentState)
   {
@@ -723,7 +733,9 @@ int getNextMinSecFromCurrentMinSec(int current, boolean increment){
 
 void setup(){
 
-  Serial.begin(9600);
+  #ifndef DO_NOT_SHOW_SERIAL_OUT
+    Serial.begin(9600);
+  #endif
   
  //Turn off TX and RX pin
   pinMode(RXLED_PIN, OUTPUT);
