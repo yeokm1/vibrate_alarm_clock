@@ -4,6 +4,8 @@
 #include <Adafruit_SSD1306.h>
 #include <RTClib.h>
 #include <RTC_DS1307.h>
+#include "LowPower.h"
+
 #include "constants.h"
 #include "tune.h"
 
@@ -102,7 +104,7 @@ void loop(){
    
     int voltageADCReading = analogRead(VOLTAGE_MEASURE_PIN);
      //Multiply 2 as we are are using a half voltage divider
-    int batteryMilliVolt = ((float) voltageADCReading / ADC_PRECISION) * 2 * VOLTAGE_OF_VCC_MV;
+    int batteryMilliVolt = ((long) voltageADCReading * 2 * VOLTAGE_OF_VCC_MV) / ADC_PRECISION;
 
     writeDateTimeToDisplayBuffer(now, blinkOn);
     writeAlarmToDisplayBuffer(blinkOn);
@@ -112,6 +114,8 @@ void loop(){
     
     display.display();
   }
+  
+  LowPower.powerDown(SLEEP_30MS, ADC_OFF, BOD_OFF);
   
 }
 
