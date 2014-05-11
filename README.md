@@ -24,13 +24,13 @@ I agree this is an epic mess but the space constraints left me no choice. Higher
 8. 2x 1k ohm resistors (as voltage divider to measure battery voltage)
 9. Pololu DRV8833 dual motor driver  
 10. 10mm vibration motor
+11. 1000mAh Lithium battery
 
 
 Optional:  
 
-1. Lithium battery  
-3. 2x half-breadboard 
-4. Translucent case  
+1. 2x half-breadboard 
+2. Translucent case  
 
 
 
@@ -42,6 +42,14 @@ Closest components used as Fritzing does not have them.
 2. 128x32 OLED as 128x64 OLED.  
 3. Fio as Fio V3 (Fio's DTR Pin = Fio V3's RST Pin)  
 4. RTC module as Chronodot
+
+<b>Tips:</b>
+
+1. Using Rocket Scream's Low Power library works wonders on the Arduino power usage. Standby current use with OLED off is reduced frow 26mA to 16mA giving battery life at approximately 60 hours at best case scenario.
+
+2. Try to avoid using float variables in your Arduino code if you are tight on binary size. Use integer or long variables for intermediate variables if you must.
+
+3. Store unimportant data into flash memory to reduce SRAM usage.
 
 <b>Stuff to note:</b>
 
@@ -75,13 +83,16 @@ Closest components used as Fritzing does not have them.
 1. Adafruit SSD1306 OLED library  
 (https://github.com/adafruit/Adafruit_SSD1306)
 
-2. AnyRTC RTClib  
+2. AnyRTC RTClib    
 (https://github.com/maniacbug/AnyRtc)
 
-3. Get day of week from date.  
+3. Rocket Scream Low Power library  
+(http://www.rocketscream.com/blog/2011/07/04/lightweight-low-power-arduino-library/)
+
+4. Get day of week from date.  
 (http://stackoverflow.com/a/21235587)
 
-4. Super Mario tune  
+5. Super Mario tune  
 (http://www.linuxcircle.com/2013/03/31/playing-mario-bros-tune-with-arduino-and-piezo-buzzer/)
 
 
