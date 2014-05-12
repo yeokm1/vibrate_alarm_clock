@@ -12,7 +12,7 @@
 #define DO_NOT_SHOW_SERIAL_OUT //Comment this line if you want serial debugging for button press
 
 #define MIN_BATTERY_MILLIVOLT 3300 //You may need to calibrate this
-#define MAX_BATTERY_MILLIVOLT 4300 //You may need to calibrate this
+#define MAX_BATTERY_MILLIVOLT 4200 //You may need to calibrate this
 
 #define DISPLAY_CONTRAST 64
 
