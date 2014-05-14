@@ -9,7 +9,7 @@ This device is meant for my friend's birthday gift.
 
 ![Screen](/misc/internal.jpg)
 
-I agree this is an epic mess but the space constraints left me no choice. Higher resolution photos are available in the "misc" directory.   
+I agree this is an epic mess but the space constraints left me no choice. Higher resolution photos are available in the "misc" directory. Battery life is approximately 37 hours based on usage of 26mA measured.  
 
 
 <b>Main Parts used:</b>  
@@ -89,6 +89,7 @@ Closest components used as Fritzing does not have them.
 
 3. Rocket Scream Low Power library  
 (http://www.rocketscream.com/blog/2011/07/04/lightweight-low-power-arduino-library/)
+This library was initially used then abandoned as I realised it may cause the alarm to not be triggered when in sleep mode.
 
 4. Get day of week from date.  
 (http://stackoverflow.com/a/21235587)
