@@ -4,7 +4,6 @@
 #include <Adafruit_SSD1306.h>
 #include <RTClib.h>
 #include <RTC_DS1307.h>
-#include "LowPower.h"
 
 #include "constants.h"
 #include "tune.h"
@@ -116,13 +115,6 @@ void loop(){
     display.display();
   }
   
-  //Only power down in normal mode, the rest of the time, at max performance
-  if(currentState == NORMAL) {
-      LowPower.powerDown(SLEEP_30Ms, ADC_OFF, BOD_OFF);
-      
-      //This is to give the Arduino sufficient time to wake up. Without this, the alarm may not engage as I suspect the millis() is affected
-      delay(15); 
-  }
   
 }
  
@@ -482,8 +474,6 @@ void soundAlarmAtThisPointIfNeeded(){
       lastMotorDirection = !lastMotorDirection;
       turnMotor(true, lastMotorDirection);
     }
-    
-    currentMillis = millis();
     
     if(alarmSound && ((currentMillis - timePlayedPreviousTone) >  previousNoteDuration)){
       timePlayedPreviousTone = currentMillis;
