@@ -118,7 +118,7 @@ void loop(){
   
   //Only power down in normal mode, the rest of the time, at max performance
   if(currentState == NORMAL) {
-      LowPower.powerDown(SLEEP_15Ms, ADC_OFF, BOD_OFF);
+      LowPower.powerDown(SLEEP_30Ms, ADC_OFF, BOD_OFF);
       
       //This is to give the Arduino sufficient time to wake up. Without this, the alarm may not engage as I suspect the millis() is affected
       delay(15); 
