@@ -47,7 +47,7 @@ Closest components used as Fritzing does not have them.
 
 1. Using Rocket Scream's Low Power library works wonders on the Arduino power usage. Standby current use with OLED off is reduced frow 26mA to 16mA giving battery life at approximately 60 hours at best case scenario.
 
-2. Try to avoid using float variables in your Arduino code if you are tight on binary size. Use integer or long variables for intermediate variables if you must.
+2. Try to avoid using float variables in your Arduino code if you are tight on binary size. Use integer or long types for intermediate variables if you can.
 
 3. Store unimportant data into flash memory to reduce SRAM usage.
 
