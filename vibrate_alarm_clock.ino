@@ -14,7 +14,7 @@
 #define MIN_BATTERY_MILLIVOLT 3300 //You may need to calibrate this
 #define MAX_BATTERY_MILLIVOLT 4200 //You may need to calibrate this
 
-#define DISPLAY_CONTRAST 64
+#define DISPLAY_CONTRAST true
 
 #define INITIAL_TEXT "Happy 24th birthday\n Jason!\n\nBy: Yeo Kheng Meng\n(14 May 2014)"
 #define INITIAL_TEXT_DELAY 5000
