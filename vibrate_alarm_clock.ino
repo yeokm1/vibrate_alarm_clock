@@ -24,7 +24,7 @@
 
 
 #define MIN_TIME_BETWEEN_ALARM_STARTS 60000 //60 seconds
-#define MIN_TIME_TO_CHANGE_MOTOR_DIRECTION 1000
+#define MIN_TIME_TO_CHANGE_MOTOR_DIRECTION 500
 
 #define MAX_ALARM_LENGTH 600000 //Alarm rings for 10 minutes max
 
@@ -48,8 +48,10 @@ int alarmMinute = 00;
 
 unsigned long alarmLastStarted;
 
+typedef enum{M_CLOCKWISE, M_PAUSE1, M_ANTI_CLOCKWISE, M_PAUSE2} MOTOR_STATE;
+MOTOR_STATE lastMotorState;
+
 unsigned long lastVibration;
-boolean lastMotorDirection;
 
 unsigned long timeLastPressedLeftButton;
 unsigned long timeLastPressedMiddleButton;
@@ -520,6 +522,12 @@ void checkAndSoundAlarm(int hour, int minute){
   && (alarmVibrate || alarmSound)){
     currentState = ALARM;
     alarmLastStarted = currentMillis;
+   
+   
+     if(alarmVibrate){
+        lastMotorState = M_CLOCKWISE;
+        motorDriverState(true);
+     }
   }
 
 }
@@ -533,14 +541,27 @@ void soundAlarmAtThisPointIfNeeded(){
 
     if(alarmVibrate && ((currentMillis - lastVibration) > MIN_TIME_TO_CHANGE_MOTOR_DIRECTION)){
       lastVibration = currentMillis;
-      lastMotorDirection = !lastMotorDirection;
       
-      if(lastMotorDirection){
-          turnMotor(true, lastMotorDirection);
+      if(lastMotorState == M_CLOCKWISE){
+        
+        lastMotorState = M_PAUSE1;
+        changeMotorState(false, false);
+      
+      } else if(lastMotorState == M_PAUSE1){
+        
+        lastMotorState = M_ANTI_CLOCKWISE;
+        changeMotorState(true, false);
+      
+      } else if(lastMotorState == M_ANTI_CLOCKWISE){
+        
+        lastMotorState = M_PAUSE2;
+         changeMotorState(false, false);
+      
       } else {
-        //Pause motor at regular interval.
-          turnMotor(false, false);
+        lastMotorState = M_CLOCKWISE;
+        changeMotorState(true, true);
       }
+
 
     }
     
@@ -570,7 +591,7 @@ void turnOffLCD(){
 
 void stopAlarm(){
   currentState = NORMAL;
-  turnMotor(false, false);
+  motorDriverState(false);
   noTone(SPEAKER_PIN);
   toneNow = 0;
   
@@ -751,23 +772,31 @@ String getMonth(int month){
   }
 }
 
-
-void turnMotor(bool state, bool direction){
+void motorDriverState(boolean state){
   if(state){
     digitalWrite(MOTOR_SLEEP_PIN, HIGH);
-    if(direction){
-      digitalWrite(MOTOR_PIN1, HIGH);
-      digitalWrite(MOTOR_PIN2, LOW);     
-    } else {
-      digitalWrite(MOTOR_PIN1, LOW);
-      digitalWrite(MOTOR_PIN2, HIGH); 
-    }
-    
   } else {
-    digitalWrite(MOTOR_PIN1, LOW);
-    digitalWrite(MOTOR_PIN2, LOW);  
     digitalWrite(MOTOR_SLEEP_PIN, LOW);
   }
+}
+
+void changeMotorState(boolean active, bool direction){
+
+  if(!active){
+     digitalWrite(MOTOR_PIN1, LOW);
+     digitalWrite(MOTOR_PIN2, LOW);
+     return; 
+  }
+  
+   if(direction){
+     digitalWrite(MOTOR_PIN1, HIGH);
+     digitalWrite(MOTOR_PIN2, LOW);     
+   } else {
+     digitalWrite(MOTOR_PIN1, LOW);
+     digitalWrite(MOTOR_PIN2, HIGH); 
+   }
+    
+
 
 }
 
