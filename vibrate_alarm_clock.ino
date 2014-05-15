@@ -26,7 +26,7 @@
 #define MIN_TIME_BETWEEN_ALARM_STARTS 60000 //60 seconds
 #define MIN_TIME_TO_CHANGE_MOTOR_DIRECTION 1500
 
-#define MAX_ALARM_LENGTH 1200000 //Alarm rings for 20 minutes max
+#define MAX_ALARM_LENGTH 600000 //Alarm rings for 10 minutes max
 
 RTC_DS1307 RTC;
 Adafruit_SSD1306 display(OLED_RESET_PIN);
