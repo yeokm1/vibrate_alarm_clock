@@ -5,6 +5,7 @@
 #include <RTClib.h>
 #include <RTC_DS1307.h>
 
+#include "LowPower.h"
 #include "constants.h"
 #include "tune.h"
 
@@ -115,6 +116,12 @@ void loop(){
     display.display();
   }
   
+  if((currentState == NORMAL)
+  && !alarmSound && !alarmVibrate){
+    //Only sleep if no alarm is set. If in other modes like setting, give max performance. 
+     LowPower.powerDown(SLEEP_30MS, ADC_OFF, BOD_OFF);
+
+  }
   
 }
  
