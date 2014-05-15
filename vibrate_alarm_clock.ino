@@ -479,7 +479,14 @@ void soundAlarmAtThisPointIfNeeded(){
     if(alarmVibrate && ((currentMillis - lastVibration) > MIN_TIME_TO_CHANGE_MOTOR_DIRECTION)){
       lastVibration = currentMillis;
       lastMotorDirection = !lastMotorDirection;
-      turnMotor(true, lastMotorDirection);
+      
+      if(lastMotorDirection){
+          turnMotor(true, lastMotorDirection);
+      } else {
+        //Pause motor at regular interval.
+          turnMotor(false, false);
+      }
+
     }
     
     if(alarmSound && ((currentMillis - timePlayedPreviousTone) >  previousNoteDuration)){
