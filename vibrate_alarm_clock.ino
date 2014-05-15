@@ -66,6 +66,61 @@ int previousNoteDuration;
   
 boolean showLCD = true;
 
+void setup(){
+
+  #ifndef DO_NOT_SHOW_SERIAL_OUT
+    Serial.begin(9600);
+  #endif
+  
+ //Turn off TX and RX pin
+  pinMode(RXLED_PIN, OUTPUT);
+  digitalWrite(RXLED_PIN, LOW);
+  TXLED1;
+  
+  Wire.begin();
+  RTC.begin();
+  
+
+  // This section grabs the current datetime and compares it to
+  // the compilation time.  If necessary, the RTC is updated.
+  DateTime now = RTC.now();
+  DateTime compiled = DateTime(__DATE__, __TIME__);
+  
+  if (now.unixtime() < compiled.unixtime()) {
+    RTC.adjust(DateTime(__DATE__, __TIME__));
+  } 
+  
+  
+  // initialize with the OLED with I2C addr 0x3D (for the 128x64)
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3D); 
+  
+  display.dim(DISPLAY_CONTRAST);
+  
+  display.clearDisplay();
+  display.setTextColor(WHITE);
+  display.setTextSize(1);
+  display.setCursor(0,0);
+  display.println(INITIAL_TEXT);
+ 
+  
+  display.display();
+  
+  
+  delay(INITIAL_TEXT_DELAY);
+  
+
+  pinMode(LEFT_BUTTON_PIN, INPUT); 
+  pinMode(MIDDLE_BUTTON_PIN, INPUT); 
+  pinMode(RIGHT_BUTTON_PIN, INPUT);
+  pinMode(VOLTAGE_MEASURE_PIN, INPUT);
+  
+  pinMode(MOTOR_PIN1, OUTPUT); 
+  pinMode(MOTOR_PIN2, OUTPUT);
+  pinMode(MOTOR_SLEEP_PIN, OUTPUT);
+  
+}
+
+
 void loop(){
    
  
@@ -753,63 +808,4 @@ int getNextMinSecFromCurrentMinSec(int current, boolean increment){
   //To produce positive modulo result
   return (newValue % 60 + 60) % 60;
 }
-
-void setup(){
-
-  #ifndef DO_NOT_SHOW_SERIAL_OUT
-    Serial.begin(9600);
-  #endif
-  
- //Turn off TX and RX pin
-  pinMode(RXLED_PIN, OUTPUT);
-  digitalWrite(RXLED_PIN, LOW);
-  TXLED1;
-  
-  Wire.begin();
-  RTC.begin();
-  
-
-  // This section grabs the current datetime and compares it to
-  // the compilation time.  If necessary, the RTC is updated.
-  DateTime now = RTC.now();
-  DateTime compiled = DateTime(__DATE__, __TIME__);
-  
-  if (now.unixtime() < compiled.unixtime()) {
-    RTC.adjust(DateTime(__DATE__, __TIME__));
-  } 
-  
-  
-  // initialize with the OLED with I2C addr 0x3D (for the 128x64)
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3D); 
-  
-  display.dim(DISPLAY_CONTRAST);
-  
-  display.clearDisplay();
-  display.setTextColor(WHITE);
-  display.setTextSize(1);
-  display.setCursor(0,0);
-  display.println(INITIAL_TEXT);
- 
-  
-  display.display();
-  
-  
-  delay(INITIAL_TEXT_DELAY);
-  
-
-  pinMode(LEFT_BUTTON_PIN, INPUT); 
-  pinMode(MIDDLE_BUTTON_PIN, INPUT); 
-  pinMode(RIGHT_BUTTON_PIN, INPUT);
-  pinMode(VOLTAGE_MEASURE_PIN, INPUT);
-  
-  pinMode(MOTOR_PIN1, OUTPUT); 
-  pinMode(MOTOR_PIN2, OUTPUT);
-  pinMode(MOTOR_SLEEP_PIN, OUTPUT);
-  
-}
-
-
-
-
-
 
