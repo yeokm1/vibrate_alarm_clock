@@ -48,7 +48,7 @@ int alarmMinute = 00;
 
 unsigned long alarmLastStarted;
 
-typedef enum{M_CLOCKWISE, M_PAUSE1, M_ANTI_CLOCKWISE, M_PAUSE2} MOTOR_STATE;
+typedef enum{M_CLOCKWISE, M_PAUSE} MOTOR_STATE;
 MOTOR_STATE lastMotorState;
 
 unsigned long lastVibration;
@@ -544,22 +544,14 @@ void soundAlarmAtThisPointIfNeeded(){
       
       if(lastMotorState == M_CLOCKWISE){
         
-        lastMotorState = M_PAUSE1;
+        lastMotorState = M_PAUSE;
         changeMotorState(false, false);
       
-      } else if(lastMotorState == M_PAUSE1){
+      } else if(lastMotorState == M_PAUSE){
         
-        lastMotorState = M_ANTI_CLOCKWISE;
+        lastMotorState = M_CLOCKWISE;
         changeMotorState(true, false);
       
-      } else if(lastMotorState == M_ANTI_CLOCKWISE){
-        
-        lastMotorState = M_PAUSE2;
-         changeMotorState(false, false);
-      
-      } else {
-        lastMotorState = M_CLOCKWISE;
-        changeMotorState(true, true);
       }
 
 
