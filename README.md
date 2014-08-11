@@ -22,7 +22,7 @@ I agree this is an epic mess but the space constraints left me no choice. Higher
 5. 3x 10k ohm resistors (for switches)  
 6. 8 ohm thin speaker  
 7. 100 ohm resistor (for speaker)  
-8. 2x 1k ohm resistors (as voltage divider to measure battery voltage)
+8. 2x 1Mega ohm resistors (as voltage divider to measure battery voltage)
 9. Pololu DRV8833 dual motor driver  
 10. 10mm vibration motor
 11. 1000mAh Lithium battery
