@@ -1,8 +1,9 @@
 vibrate_alarm_clock
 ===================
 
-An alarm clock with vibration and battery monitoring capabilities. During an alarm, it plays the Super Mario tune. Buttons available to set the alarm, turn off OLED and reset.
-This device is meant for my friend's birthday gift.
+An alarm clock with vibration and battery monitoring capabilities. During an alarm, it plays the Super Mario tune. Buttons available to set the alarm, turn off OLED and reset. This device is meant for my friend's birthday gift.
+
+The second iteration of this clock can be found [here](https://github.com/yeokm1/vibrate_alarm_clock_2).
 
 ![Screen](/misc/front.jpg)
 
